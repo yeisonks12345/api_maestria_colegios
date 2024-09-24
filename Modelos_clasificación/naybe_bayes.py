@@ -1,7 +1,9 @@
+
+from sklearn.naive_bayes import GaussianNB
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score
-from sklearn.ensemble import RandomForestClassifier
 import pandas as pd
+from sklearn.metrics import classification_report, confusion_matrix
 
 df = pd.read_csv('df_output/balanceado_sinfaltantes.csv')
 # Dividir los datos
@@ -10,12 +12,9 @@ y =df['GLOBAL_CATEGORICO']
 
 Xtrain,Xtest,Ytrain,Ytest=train_test_split(X,y,test_size=0.2,random_state=2)
 
-ran_forest = RandomForestClassifier(n_estimators=19,random_state=2016,min_samples_leaf=6,)
+nb = GaussianNB()
+nb.fit(Xtrain, Ytrain)
+predictions = nb.predict(Xtest)
+print("Accuracy (Naive Bayes):", accuracy_score(Ytest, predictions))
 
-ran_forest.fit(Xtrain,Ytrain)
-
-preds = ran_forest.predict(Xtest)
-print(accuracy_score(Ytest, preds))
-print('********************+')
-print(ran_forest.score(Xtest,Ytest))
-#genera un accuracy de 0.6267
+#accuracy NB 0.511041

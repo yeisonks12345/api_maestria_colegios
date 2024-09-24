@@ -9,26 +9,11 @@ from keras.models import Sequential
 from keras.layers import Dense
 from keras.optimizers import SGD
 from keras.utils import np_utils
+df = pd.read_csv('df_output/balanceado_sinfaltantes.csv')
+X =df.drop(['GLOBAL_CATEGORICO','PUNT_GLOBAL','INSE','ESTU_CONSECUTIVO','ESTU_NSE_ESTABLECIMIENTO','ESTU_NSE_ESTABLECIMIENTO','COLE_CODIGO_ICFES','COLE_DEPTO_UBICACION','COLE_COD_DEPTO_UBICACION','COLE_MCPIO_UBICACION','ESTU_ESTUDIANTE','COLE_COD_MCPIO_UBICACION','ESTU_PRIVADO_LIBERTAD','ESTU_COD_MCPIO_PRESENTACION','ESTU_ESTADOINVESTIGACION','ESTU_MCPIO_PRESENTACION','ESTU_DEPTO_PRESENTACION','ESTU_COD_DEPTO_PRESENTACION','ESTU_COD_RESIDE_DEPTO','ESTU_DEPTO_RESIDE'],axis=1) 
+Y_num =df['GLOBAL_CATEGORICO'].values
 
-df = pd.read_csv('df_output\datos_codifcadobalanceados.csv')
-variables_principales= ['INSE','EDAD'
-                        ,'ESTU_DEDICACIONLECTURADIARIA','ESTU_DEDICACIONINTERNET']
-df_y = df[['PUNT_GLOBAL']]
-def y_cambio(i):
-    if i<=279:
-        return 0
-    elif i >=280 and i <= 359:
-        return 1
- 
-    
-    elif i >=360:
-        return 2
-
-df_y['PUNT_GLOBAL'] = df_y['PUNT_GLOBAL'].apply(y_cambio)
-Y_num= df_y['PUNT_GLOBAL'].values
 Y = np_utils.to_categorical(Y_num,3)
-X = df[variables_principales].values
-
 
 
 np.random.seed(1)
@@ -42,3 +27,4 @@ modelo.compile(loss='categorical_crossentropy',optimizer=sgd,metrics=['accuracy'
 n_its = 2000
 batch_size = X.shape[0]
 historia = modelo.fit(X,Y,epochs=n_its,batch_size=batch_size,verbose=2)
+#accuracy 0.33

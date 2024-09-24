@@ -1,7 +1,8 @@
+from sklearn.neighbors import KNeighborsClassifier
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score
-from sklearn.ensemble import RandomForestClassifier
 import pandas as pd
+from sklearn.metrics import classification_report, confusion_matrix
 
 df = pd.read_csv('df_output/balanceado_sinfaltantes.csv')
 # Dividir los datos
@@ -9,13 +10,8 @@ X =df.drop(['GLOBAL_CATEGORICO','PUNT_GLOBAL','INSE','ESTU_CONSECUTIVO','ESTU_NS
 y =df['GLOBAL_CATEGORICO']
 
 Xtrain,Xtest,Ytrain,Ytest=train_test_split(X,y,test_size=0.2,random_state=2)
-
-ran_forest = RandomForestClassifier(n_estimators=19,random_state=2016,min_samples_leaf=6,)
-
-ran_forest.fit(Xtrain,Ytrain)
-
-preds = ran_forest.predict(Xtest)
-print(accuracy_score(Ytest, preds))
-print('********************+')
-print(ran_forest.score(Xtest,Ytest))
-#genera un accuracy de 0.6267
+knn = KNeighborsClassifier(n_neighbors=5)
+knn.fit(Xtrain, Ytrain)
+predictions = knn.predict(Xtest)
+print("Accuracy (KNN):", accuracy_score(Ytest, predictions))
+#Accuracy KNN = 0.484752
