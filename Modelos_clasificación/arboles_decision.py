@@ -3,6 +3,7 @@ from sklearn.tree import DecisionTreeClassifier
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import classification_report, confusion_matrix
 from sklearn.metrics import accuracy_score
+from sklearn.metrics import f1_score, recall_score
 
 df = pd.read_csv('df_output/balanceado_sinfaltantes.csv')
 # Dividir los datos
@@ -15,10 +16,13 @@ model_dt = DecisionTreeClassifier(random_state=42)
 model_dt.fit(X_train, y_train)
 
 # Predicciones
-y_pred = model_dt.predict(X_test)
+predictions = model_dt.predict(X_test)
 
 # Evaluación
-print(confusion_matrix(y_test, y_pred))
-print(classification_report(y_test, y_pred))
-print(accuracy_score(y_test, y_pred))
+#print(confusion_matrix(y_test, y_pred))
+#print(classification_report(y_test, y_pred))
+print('accuracy: ',accuracy_score(y_test, predictions))
+print('f1_score: ',f1_score(y_test, predictions, average='weighted'))  # Para manejo de multiclase
+print('recall: ',recall_score(y_test, predictions, average='weighted'))
+ 
 #arboles de decision genera un accuracy de 0.5394 

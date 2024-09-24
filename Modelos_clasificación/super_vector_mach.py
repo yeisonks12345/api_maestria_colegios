@@ -20,4 +20,4 @@ print(confusion_matrix(Ytest, y_pred))
 print(classification_report(Ytest, y_pred))
 print(accuracy_score(Ytest, y_pred))
 
-#accuracy de: 
+#accuracy de: No corre, se prueba por mas de dos horas pero no arroja resultado

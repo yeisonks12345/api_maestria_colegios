@@ -3,6 +3,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from sklearn.metrics import accuracy_score
 import xgboost as xgb
+from sklearn.metrics import f1_score, recall_score
 
 df = pd.read_csv('df_output/balanceado_sinfaltantes.csv')
 
@@ -12,7 +13,7 @@ obtienen unicamente despues de que el estudiante presente la prueba del icfes, "
 x =df.drop(['GLOBAL_CATEGORICO','PUNT_GLOBAL','INSE','ESTU_CONSECUTIVO','ESTU_NSE_ESTABLECIMIENTO','ESTU_NSE_ESTABLECIMIENTO','COLE_CODIGO_ICFES','COLE_DEPTO_UBICACION','COLE_COD_DEPTO_UBICACION','COLE_MCPIO_UBICACION','ESTU_ESTUDIANTE','COLE_COD_MCPIO_UBICACION','ESTU_PRIVADO_LIBERTAD','ESTU_COD_MCPIO_PRESENTACION','ESTU_ESTADOINVESTIGACION','ESTU_MCPIO_PRESENTACION','ESTU_DEPTO_PRESENTACION','ESTU_COD_DEPTO_PRESENTACION','ESTU_COD_RESIDE_DEPTO','ESTU_DEPTO_RESIDE'],axis=1) 
 y =df['GLOBAL_CATEGORICO']
 
-Xtrain,Xtest,Ytrain,Ytest=train_test_split(x,y,test_size=0.2,random_state=2)
+X_train, X_test, y_train, y_test=train_test_split(x,y,test_size=0.2,random_state=2)
 
 xgb_classifier = xgb.XGBClassifier(n_estimators=2200, 
                                    objective="multi:softprob", 
@@ -24,11 +25,11 @@ xgb_classifier = xgb.XGBClassifier(n_estimators=2200,
                                    subsample= 0.7, 
                                    enable_categorical=True)
 
-xgb_classifier.fit(Xtrain, Ytrain)
+xgb_classifier.fit(X_train, y_train)
 
 
-preds = xgb_classifier.predict(Xtest)
-print(accuracy_score(Ytest, preds))
+predictions = xgb_classifier.predict(X_test)
+
 import pickle
 #pickle.dump(xgb_classifier,open('icfes_clasi.pkl','wb'))
 
@@ -53,13 +54,13 @@ grid_search = GridSearchCV(estimator=xgb.XGBClassifier(objective="multi:softprob
                            scoring='accuracy', 
                            cv=3, 
                            verbose=1)
-grid_search.fit(Xtrain, Ytrain)
+grid_search.fit(X_train, y_train)
 print(grid_search.best_params_)
 """
 
 #Imprimir las variables principales de xgboost
 importances = xgb_classifier.feature_importances_
-feature_names = Xtrain.columns
+feature_names = X_train.columns
 # Crear un DataFrame con los nombres de las características y sus importancias
 importance_df = pd.DataFrame({
     'Feature': feature_names,
@@ -67,8 +68,11 @@ importance_df = pd.DataFrame({
 })
 
 # Ordenar las características por importancia (de mayor a menor)
-importance_df = importance_df.sort_values(by='Importance', ascending=False)
-
+#importance_df = importance_df.sort_values(by='Importance', ascending=False)
 # Imprimir el DataFrame
 #print(importance_df.head(20))
-importance_df.to_csv('df_output/feature_importance_xgb.csv',index=False)
+#importance_df.to_csv('df_output/feature_importance_xgb.csv',index=False)
+
+print('accuracy: ',accuracy_score(y_test, predictions))
+print('f1_score: ',f1_score(y_test, predictions, average='weighted'))  # Para manejo de multiclase
+print('recall: ',recall_score(y_test, predictions, average='weighted'))
