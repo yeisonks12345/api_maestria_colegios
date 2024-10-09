@@ -76,3 +76,5 @@ importance_df = pd.DataFrame({
 print('accuracy: ',accuracy_score(y_test, predictions))
 print('f1_score: ',f1_score(y_test, predictions, average='weighted'))  # Para manejo de multiclase
 print('recall: ',recall_score(y_test, predictions, average='weighted'))
+
+#accuracy 0.6524, f1score 0.65209, recall 0.652460

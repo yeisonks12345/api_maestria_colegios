@@ -28,11 +28,7 @@ xgb_classifier.fit(X_train, y_train)
 
 predictions = xgb_classifier.predict(X_test)
 
-import pickle
-#pickle.dump(xgb_classifier,open('icfes_clasi.pkl','wb'))
-
-#print(len(x.columns))
-#el modelo genera un accuracy de 0.63 sin grid search, con grid search sube a 0.6477 existen 43 variables predictoras.
+y_train_pred = xgb_classifier.predict(X_train)
 
 """Uso de grid search para encontrar los mejores parametros
 {'colsample_bytree': 0.8, 'learning_rate': 0.01, 'max_depth': 3, 'n_estimators': 1500, 'subsample': 0.7}
@@ -75,4 +71,11 @@ print('accuracy: ',accuracy_score(y_test, predictions))
 print('f1_score: ',f1_score(y_test, predictions, average='weighted'))  # Para manejo de multiclase
 print('recall: ',recall_score(y_test, predictions, average='weighted'))
 
+#Se usa el mejor modelo para la app
+import pickle
+pickle.dump(xgb_classifier,open('icfes_clasi.pkl','wb'))
+
 #con la técnica de borrar datos faltantes se obtiene un accuracy de 0.676675, f1_score 0.678273, recall 0.676675
+# el accuracy de train da un valor de 0.7120, no se observa overfitting
+
+print('accuracy_train: ',accuracy_score(y_train, y_train_pred))

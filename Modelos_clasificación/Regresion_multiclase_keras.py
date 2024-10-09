@@ -39,8 +39,12 @@ from sklearn.model_selection import train_test_split
 from sklearn.datasets import load_iris
 from keras.utils import np_utils
 # Cargar un dataset de ejemplo
-df = pd.read_csv('df_output/balanceado_sinfaltantes.csv')
-X =df.drop(['GLOBAL_CATEGORICO','PUNT_GLOBAL','INSE','ESTU_CONSECUTIVO','ESTU_NSE_ESTABLECIMIENTO','ESTU_NSE_ESTABLECIMIENTO','COLE_CODIGO_ICFES','COLE_DEPTO_UBICACION','COLE_COD_DEPTO_UBICACION','COLE_MCPIO_UBICACION','ESTU_ESTUDIANTE','COLE_COD_MCPIO_UBICACION','ESTU_PRIVADO_LIBERTAD','ESTU_COD_MCPIO_PRESENTACION','ESTU_ESTADOINVESTIGACION','ESTU_MCPIO_PRESENTACION','ESTU_DEPTO_PRESENTACION','ESTU_COD_DEPTO_PRESENTACION','ESTU_COD_RESIDE_DEPTO','ESTU_DEPTO_RESIDE'],axis=1) 
+
+df = pd.read_csv('df_output/borrando_faltantes/balanceado_sinfaltantes.csv')
+
+
+X =df.drop(['GLOBAL_CATEGORICO','PUNT_GLOBAL'],axis=1) 
+
 Y_num =df['GLOBAL_CATEGORICO'].values
 
 #y = np_utils.to_categorical(Y_num,3)
@@ -80,3 +84,5 @@ recall = recall_score(y_true_classes, y_pred_classes, average='weighted')
 # Mostrar los resultados
 print(f"F1-Score (weighted): {f1}")
 print(f"Recall (weighted): {recall}")
+
+#accuracy 0.3293, f1score 0.1667, recall 0.3334

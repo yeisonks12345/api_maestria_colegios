@@ -1,4 +1,4 @@
-#Se requieren 34 varaibles para no depender del INSE y del NSE, genera un score de 0.73
+#el modelo actual genera un accuracy de 0.67
 import streamlit as st
 import pandas as pd
 import numpy as np
