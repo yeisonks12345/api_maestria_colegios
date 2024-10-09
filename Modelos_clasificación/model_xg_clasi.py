@@ -5,12 +5,10 @@ from sklearn.metrics import accuracy_score
 import xgboost as xgb
 from sklearn.metrics import f1_score, recall_score
 
-df = pd.read_csv('df_output/balanceado_sinfaltantes.csv')
+df = pd.read_csv('df_output/borrando_faltantes/balanceado_sinfaltantes.csv')
 
-"""Se eliminan todas las variables que tengan relacion con el icfes, o datos que se 
-obtienen unicamente despues de que el estudiante presente la prueba del icfes, """
 
-x =df.drop(['GLOBAL_CATEGORICO','PUNT_GLOBAL','INSE','ESTU_CONSECUTIVO','ESTU_NSE_ESTABLECIMIENTO','ESTU_NSE_ESTABLECIMIENTO','COLE_CODIGO_ICFES','COLE_DEPTO_UBICACION','COLE_COD_DEPTO_UBICACION','COLE_MCPIO_UBICACION','ESTU_ESTUDIANTE','COLE_COD_MCPIO_UBICACION','ESTU_PRIVADO_LIBERTAD','ESTU_COD_MCPIO_PRESENTACION','ESTU_ESTADOINVESTIGACION','ESTU_MCPIO_PRESENTACION','ESTU_DEPTO_PRESENTACION','ESTU_COD_DEPTO_PRESENTACION','ESTU_COD_RESIDE_DEPTO','ESTU_DEPTO_RESIDE'],axis=1) 
+x =df.drop(['GLOBAL_CATEGORICO','PUNT_GLOBAL'],axis=1) 
 y =df['GLOBAL_CATEGORICO']
 
 X_train, X_test, y_train, y_test=train_test_split(x,y,test_size=0.2,random_state=2)
@@ -69,10 +67,12 @@ importance_df = pd.DataFrame({
 
 # Ordenar las características por importancia (de mayor a menor)
 #importance_df = importance_df.sort_values(by='Importance', ascending=False)
-# Imprimir el DataFrame
+#Imprimir el DataFrame
 #print(importance_df.head(20))
-#importance_df.to_csv('df_output/feature_importance_xgb.csv',index=False)
+#importance_df.to_csv('df_output/borrando_faltantes/feature_importance_xgb.csv',index=False)
 
 print('accuracy: ',accuracy_score(y_test, predictions))
 print('f1_score: ',f1_score(y_test, predictions, average='weighted'))  # Para manejo de multiclase
 print('recall: ',recall_score(y_test, predictions, average='weighted'))
+
+#con la técnica de borrar datos faltantes se obtiene un accuracy de 0.676675, f1_score 0.678273, recall 0.676675
