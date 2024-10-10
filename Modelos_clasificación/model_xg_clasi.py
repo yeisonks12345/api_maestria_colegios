@@ -6,9 +6,9 @@ import xgboost as xgb
 from sklearn.metrics import f1_score, recall_score
 
 df = pd.read_csv('df_output/borrando_faltantes/balanceado_sinfaltantes.csv')
-
-
-x =df.drop(['GLOBAL_CATEGORICO','PUNT_GLOBAL'],axis=1) 
+#con base en feature importance se prueban con diferente cantidad de variables para el despliegue, se borrar las columnas:
+borrar = ['GLOBAL_CATEGORICO','PUNT_GLOBAL','COLE_AREA_UBICACION','COLE_NOMBRE_ESTABLECIMIENTO','COLE_SEDE_PRINCIPAL','COLE_NOMBRE_SEDE','COLE_GENERO','COLE_NATURALEZA','ESTU_TIPOREMUNERACION','ESTU_DEDICACIONINTERNET','FAMI_PERSONASHOGAR','COLE_COD_DANE_ESTABLECIMIENTO','FAMI_TRABAJOLABORPADRE','FAMI_CUARTOSHOGAR','COLE_COD_DANE_SEDE','FAMI_TIENESERVICIOTV','FAMI_COMECEREALFRUTOSLEGUMBRE','FAMI_TRABAJOLABORMADRE','PERIODO','FAMI_TIENECONSOLAVIDEOJUEGOS','FAMI_TIENELAVADORA','FAMI_TIENEHORNOMICROOGAS','ESTU_PAIS_RESIDE','ESTU_MCPIO_RESIDE','ESTU_NACIONALIDAD','ESTU_DEPTO_RESIDE','COLE_MCPIO_UBICACION','COLE_DEPTO_UBICACION']
+x =df.drop(borrar,axis=1) 
 y =df['GLOBAL_CATEGORICO']
 
 X_train, X_test, y_train, y_test=train_test_split(x,y,test_size=0.2,random_state=2)
@@ -72,10 +72,11 @@ print('f1_score: ',f1_score(y_test, predictions, average='weighted'))  # Para ma
 print('recall: ',recall_score(y_test, predictions, average='weighted'))
 
 #Se usa el mejor modelo para la app
-import pickle
-pickle.dump(xgb_classifier,open('icfes_clasi.pkl','wb'))
+#import pickle
+#pickle.dump(xgb_classifier,open('icfes_clasi.pkl','wb'))
 
 #con la técnica de borrar datos faltantes se obtiene un accuracy de 0.676675, f1_score 0.678273, recall 0.676675
 # el accuracy de train da un valor de 0.7120, no se observa overfitting
 
 print('accuracy_train: ',accuracy_score(y_train, y_train_pred))
+# al reducir las variables a 20 el modelo en sus metricas no desmejora, se opta por usar solo 20 featues, nuevo accuracy 0.655
