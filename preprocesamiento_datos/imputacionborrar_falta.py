@@ -51,6 +51,6 @@ df_class2_downsampled = resample(df_class2, replace=False, n_samples=min_size, r
 
 df_balanced = pd.concat([df_class0_downsampled, df_class1_downsampled, df_class2_downsampled])
 #Se envía el dataframe a la carpeta df_output
-df_balanced.to_csv('df_output/borrando_faltantes/balanceado_sinfaltantes.csv',index=False)
+#df_balanced.to_csv('df_output/borrando_faltantes/balanceado_sinfaltantes.csv',index=False)
 
 
