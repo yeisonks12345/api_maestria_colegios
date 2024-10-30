@@ -24,11 +24,15 @@ def prediccion():
 
        input_dfd = pd.read_excel(uploaded_file)
        load_clf =pickle.load(open('icfes_clasi.pkl','rb'))
-       label_encoder = LabelEncoder()
+       
+       with open('label_encoders.pkl', 'rb') as file:
+          loaded_label_encoders = pickle.load(file)
+
        for col in input_dfd.columns:
-          if input_dfd[col].dtype == 'object':
-             label_encoder.fit(input_dfd[col].astype(str))
-             input_dfd[col] = label_encoder.fit_transform(input_dfd[col])
+          if col in loaded_label_encoders:
+              input_dfd[col] = loaded_label_encoders[col].transform(input_dfd[col].astype(str))
+
+
 
 
        prediction = load_clf.predict(input_dfd)
