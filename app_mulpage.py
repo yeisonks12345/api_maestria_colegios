@@ -1,11 +1,13 @@
 import streamlit as st
 import pandas as pd
 import numpy as np
+import matplotlib.pyplot as plt
 import pickle
 from sklearn.preprocessing import LabelEncoder
 from PIL import Image
 import plotly.express as px
 from sklearn.preprocessing import LabelEncoder
+
 def inicio():
     st.title('Aplicación para estimar los resultados de las pruebas saber 11')
     st.write('Bienvenido')
@@ -15,14 +17,15 @@ def inicio():
 
 def prediccion():
     st.sidebar.header("Cargue un archivo de Excel con las variables requeridas.")
-    st.subheader('En la lista desplegable, podrá seleccionar entre tres rangos, se genera una lista que podrá descargar en Excel.')
-    rangos = st.selectbox('',['Rango Menor a 280','Rango entre 280 y 360 puntos', 'Rango mayor a 360 puntos'])
+    st.subheader('Predicción resultados pruebas saber 11.')
+    
 
     uploaded_file = st.sidebar.file_uploader('cargue su archivo de Excel',type=['xlsx'])
 
     if uploaded_file is not None:
 
        input_dfd = pd.read_excel(uploaded_file)
+       input_dfd_copy = input_dfd.copy()
        load_clf =pickle.load(open('icfes_clasi.pkl','rb'))
        
        with open('label_encoders.pkl', 'rb') as file:
@@ -33,33 +36,69 @@ def prediccion():
               input_dfd[col] = loaded_label_encoders[col].transform(input_dfd[col].astype(str))
 
 
-
-
        prediction = load_clf.predict(input_dfd)
        input_dfd['clasificacion'] = prediction
+       c1,c2,c3 = st.columns(3)
+       with c1:
+         menor_280= round(input_dfd[input_dfd['clasificacion']==0].count()[0]/input_dfd['clasificacion'].count()*100,1)
+         #productosAnt= dfMesAnterior['Cantidad'].sum()
+         #variacion=productosAnt-productosAct
+         st.metric(label="Menor a 280 puntos",value=f'{menor_280:,.0f} %',delta="Estudiantes")
+       
+       with c2:
+         entre280_360= round(input_dfd[input_dfd['clasificacion']==1].count()[0]/input_dfd['clasificacion'].count()*100,1)
+         #productosAnt= dfMesAnterior['Cantidad'].sum()
+         #variacion=productosAnt-productosAct
+         st.metric(label="Entre 280 y 360 puntos",value=f'{entre280_360:,.0f} %',delta="Estudiantes")
+       with c3:
+         mayor_360= round(input_dfd[input_dfd['clasificacion']==2].count()[0]/input_dfd['clasificacion'].count()*100,1)
+         #productosAnt= dfMesAnterior['Cantidad'].sum()
+         #variacion=productosAnt-productosAct
+         st.metric(label="Mayor a 360 puntos",value=f'{mayor_360:,.0f} %',delta="Estudiantes")
 
-#st.write("Con base en los parametros indicados los estudiantes que podrian obtener un resultado igual o menor a 279 puntos son:")
-       input_dfd['clasificacion'].replace([0],['menor a 280'],inplace=True)
-       input_dfd['clasificacion'].replace([1],['entre 280 y 360'],inplace=True)
-       input_dfd['clasificacion'].replace([2],['mayor a 360'],inplace=True)
-       if rangos == 'Rango Menor a 280':
-
-          st.write(input_dfd[input_dfd['clasificacion']=='menor a 280'].reset_index())
-       elif rangos == 'Rango entre 280 y 360 puntos':
-          st.write(input_dfd[input_dfd['clasificacion']=='entre 280 y 360'].reset_index())
-       elif rangos == 'Rango mayor a 360 puntos':
-          st.write(input_dfd[input_dfd['clasificacion']=='mayor a 360'].reset_index())
-       fig = px.histogram(input_dfd, x='clasificacion', title='Distribución de la Clasificación')
-       st.plotly_chart(fig)    
+# graficos con plotly
+       c1,c2 = st.columns([60,40])
+       with c1:
+          conteo_puntaje = input_dfd['clasificacion'].value_counts().reset_index().sort_values(by='count',ascending=False)
+          conteo_puntaje.replace({0:'Menor a 280',1:'Entre 280 y 360',2:'Mayor a 360'},inplace=True)
+          fig = px.bar(conteo_puntaje, x='clasificacion', y='count',title='Distribución de la Clasificación',color='clasificacion',text='count')
+          st.plotly_chart(fig,use_container_width=True)
+       with c2:
+          st.subheader('Listado predicción resultados')
+          df_concatenado= pd.concat([input_dfd_copy,input_dfd[['clasificacion']]],axis=1).head(5)
+          st.dataframe(df_concatenado, use_container_width=True, hide_index=True)
+              
     else:
        st.warning("Por favor, cargue un archivo para continuar.")
 
+def caracterizacion():
+    st.sidebar.header("Cargue un archivo de Excel con las variables requeridas.")
+    st.subheader('Caracterización del grupo cargado')
+    
+
+    uploaded_file = st.sidebar.file_uploader('cargue su archivo de Excel',type=['xlsx'])
+
+    if uploaded_file is not None:
+
+       input_dfd = pd.read_excel(uploaded_file)
+       c1,c2 = st.columns([60,40])
+       with c1:
+          gender_counts = input_dfd['ESTU_GENERO'].value_counts().reset_index()
+          fig = px.pie(gender_counts,values= 'count',names='ESTU_GENERO',title='Distribución por genero',color='ESTU_GENERO')
+          st.plotly_chart(fig,use_container_width=True)
+    else:
+       st.warning("Por favor, cargue un archivo para continuar.")
 
 st.sidebar.title('Navegacion')
-pagina = st.sidebar.radio('Selecciona una página',['Inicio','Predicción','Mejora'])
+pagina = st.sidebar.radio('Selecciona una página',['Inicio','Caracterización','Predicción','Mejora'])
 
 if pagina=="Inicio":
     inicio()
 
 elif pagina=='Predicción':
    prediccion()
+
+elif pagina=='Caracterización':
+   caracterizacion()
+elif pagina=='Mejora':
+   pass
