@@ -64,8 +64,11 @@ def prediccion():
           fig = px.bar(conteo_puntaje, x='clasificacion', y='count',title='Distribución de la Clasificación',color='clasificacion',text='count')
           st.plotly_chart(fig,use_container_width=True)
        with c2:
-          st.subheader('Listado predicción resultados')
-          df_concatenado= pd.concat([input_dfd_copy,input_dfd[['clasificacion']]],axis=1).head(5)
+
+          st.write('\n\n')
+          st.write('\n\n')
+          st.write('\n\n**Listado predicción resultados**')
+          df_concatenado= pd.concat([input_dfd_copy,input_dfd[['clasificacion']]],axis=1)
           st.dataframe(df_concatenado, use_container_width=True, hide_index=True)
               
     else:
@@ -73,7 +76,7 @@ def prediccion():
 
 def caracterizacion():
     st.sidebar.header("Cargue un archivo de Excel con las variables requeridas.")
-    st.subheader('Caracterización del grupo cargado')
+    st.subheader('Caracterización del grupo')
     
 
     uploaded_file = st.sidebar.file_uploader('cargue su archivo de Excel',type=['xlsx'])
@@ -81,16 +84,39 @@ def caracterizacion():
     if uploaded_file is not None:
 
        input_dfd = pd.read_excel(uploaded_file)
-       c1,c2 = st.columns([60,40])
+       input_dfd_copy = input_dfd.copy()
+       load_clf =pickle.load(open('icfes_clasi.pkl','rb'))
+       
+       with open('label_encoders.pkl', 'rb') as file:
+          loaded_label_encoders = pickle.load(file)
+
+       for col in input_dfd.columns:
+          if col in loaded_label_encoders:
+              input_dfd[col] = loaded_label_encoders[col].transform(input_dfd[col].astype(str))
+
+
+       prediction = load_clf.predict(input_dfd)
+       input_dfd['clasificacion'] = prediction
+       c1,c2,c3 = st.columns(3)
        with c1:
           gender_counts = input_dfd['ESTU_GENERO'].value_counts().reset_index()
           fig = px.pie(gender_counts,values= 'count',names='ESTU_GENERO',title='Distribución por genero',color='ESTU_GENERO')
           st.plotly_chart(fig,use_container_width=True)
+       with c2:
+          df_concatenado= pd.concat([input_dfd_copy,input_dfd[['clasificacion']]],axis=1)
+          num_libros = df_concatenado['FAMI_NUMLIBROS'].value_counts().reset_index()
+          fig = px.bar(num_libros,x='FAMI_NUMLIBROS',y= 'count',title='Distribución cantidad de libros',color='FAMI_NUMLIBROS')
+          st.plotly_chart(fig,use_container_width=True)
+       with c3:
+          gender_counts = input_dfd['ESTU_GENERO'].value_counts().reset_index()
+          fig = px.pie(gender_counts,values= 'count',names='ESTU_GENERO',title='Distribución por genero',color='ESTU_GENERO')
+          st.plotly_chart(fig,use_container_width=True)
+    
     else:
        st.warning("Por favor, cargue un archivo para continuar.")
 
 st.sidebar.title('Navegacion')
-pagina = st.sidebar.radio('Selecciona una página',['Inicio','Caracterización','Predicción','Mejora'])
+pagina = st.sidebar.radio('Selecciona una página',['Inicio','Caracterización','Predicción','Prescripción'])
 
 if pagina=="Inicio":
     inicio()
@@ -100,5 +126,5 @@ elif pagina=='Predicción':
 
 elif pagina=='Caracterización':
    caracterizacion()
-elif pagina=='Mejora':
+elif pagina=='Prescripción':
    pass
