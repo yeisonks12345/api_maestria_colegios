@@ -167,39 +167,96 @@ def caracterizacion():
 def prescripcion():
 
    st.sidebar.header("Cargue un archivo de Excel con las variables requeridas.")
-   st.subheader('Potencial resultados pruebas saber para grupo especifico.')
-    
+   st.subheader('Estrategias para mejorar los resultados de las pruebas saber 11.')
 
    uploaded_file = st.sidebar.file_uploader('cargue su archivo de Excel',type=['xlsx'])
+   options = ["Aumentar número de libros en la familia a 10", "Madres finalizan bachillerato", "Padres finalizan bachillerato", "Horas de trabajo a la semana", "Familia tiene computador", "Dedicación lectura diaria", "Acceso internet", "Carne, pescado, huevos", "Leche -derivados"]
+   selected_option = st.selectbox("Elija una estrategia de la lista:", options)
+
 
    if uploaded_file is not None:
-
        input_dfd = pd.read_excel(uploaded_file)
        input_dfd_copy = input_dfd.copy()
-       options = ["Número de libros", "Educación madre", "Educación padre", "Horas de trabajo a la semana", "Familia tiene computador", "Dedicación lectura diaria", "Acceso internet", "Carne, pescado, huevos", "Leche -derivados"]
-       selected_option = st.selectbox("Elige una de las opciones:", options)
-       if selected_option =="Número de libros":
-          load_clf =pickle.load(open('icfes_clasi.pkl','rb'))
-       
-          with open('label_encoders.pkl', 'rb') as file:
-             loaded_label_encoders = pickle.load(file)
-
-          for col in input_dfd.columns:
+       input_dfd_copy_dos = input_dfd.copy()
+       load_clf =pickle.load(open('icfes_clasi.pkl','rb'))
+       with open('label_encoders.pkl', 'rb') as file:
+          loaded_label_encoders = pickle.load(file)
+       for col in input_dfd.columns:
              if col in loaded_label_encoders:
                input_dfd[col] = loaded_label_encoders[col].transform(input_dfd[col].astype(str))
-
-
+       df_original =input_dfd.copy()
+       prediction_dos= load_clf.predict(df_original)
+       df_original['clasificacion_2'] = prediction_dos
+       if selected_option =="Aumentar número de libros en la familia a 10":
+          
+          input_dfd['FAMI_NUMLIBROS'].replace({0:1},inplace =True)
           prediction = load_clf.predict(input_dfd)
           input_dfd['clasificacion'] = prediction
-          """
-          debo crear otro una prediccion y cambio de variable para ootro df donde se hagan los cambios
-          dependiendo de cada estrategia, luego se crean tarjetas donde se muestr como cambia los
-          estudiantes en cada grupo especificado.
-          """
+          
+          c1,c2,c3 = st.columns(3)
+          with c1:
+             menor_280= round(input_dfd[input_dfd['clasificacion']==0].count()[0]/input_dfd['clasificacion'].count()*100,1)
+             diferencia = input_dfd[input_dfd['clasificacion']==0].count().iloc[0,]-df_original[df_original['clasificacion_2']==0].count().iloc[0,] 
+             st.metric(label="Menor a 280 puntos",value=f'{menor_280:,.0f} %', delta=f'{diferencia:,.0f}')
        
- 
-   
-   
+          with c2:
+             entre280_360= round(input_dfd[input_dfd['clasificacion']==1].count()[0]/input_dfd['clasificacion'].count()*100,1)
+             diferencia = input_dfd[input_dfd['clasificacion']==1].count().iloc[0,]-df_original[df_original['clasificacion_2']==1].count().iloc[0,]
+         
+             st.metric(label="Entre 280 y 360 puntos",value=f'{entre280_360:,.0f} %',delta=f'{diferencia:,.0f}')
+          with c3:
+             mayor_360= round(input_dfd[input_dfd['clasificacion']==2].count()[0]/input_dfd['clasificacion'].count()*100,1)
+             diferencia = input_dfd[input_dfd['clasificacion']==2].count().iloc[0,]-df_original[df_original['clasificacion_2']==2].count().iloc[0,]
+
+             st.metric(label="Mayor a 360 puntos",value=f'{mayor_360:,.0f} %',delta=f'{diferencia:,.0f}')
+
+       if selected_option =="Madres finalizan bachillerato":
+          
+          input_dfd['FAMI_EDUCACIONMADRE'].replace({2:8,6:8,7:8,9:8},inplace =True)
+          prediction = load_clf.predict(input_dfd)
+          input_dfd['clasificacion'] = prediction
+          
+          c1,c2,c3 = st.columns(3)
+          with c1:
+             menor_280= round(input_dfd[input_dfd['clasificacion']==0].count()[0]/input_dfd['clasificacion'].count()*100,1)
+             diferencia = input_dfd[input_dfd['clasificacion']==0].count().iloc[0,]-df_original[df_original['clasificacion_2']==0].count().iloc[0,] 
+             st.metric(label="Menor a 280 puntos",value=f'{menor_280:,.0f} %', delta=f'{diferencia:,.0f}')
+       
+          with c2:
+             entre280_360= round(input_dfd[input_dfd['clasificacion']==1].count()[0]/input_dfd['clasificacion'].count()*100,1)
+             diferencia = input_dfd[input_dfd['clasificacion']==1].count().iloc[0,]-df_original[df_original['clasificacion_2']==1].count().iloc[0,]
+         
+             st.metric(label="Entre 280 y 360 puntos",value=f'{entre280_360:,.0f} %',delta=f'{diferencia:,.0f}')
+          with c3:
+             mayor_360= round(input_dfd[input_dfd['clasificacion']==2].count()[0]/input_dfd['clasificacion'].count()*100,1)
+             diferencia = input_dfd[input_dfd['clasificacion']==2].count().iloc[0,]-df_original[df_original['clasificacion_2']==2].count().iloc[0,]
+
+             st.metric(label="Mayor a 360 puntos",value=f'{mayor_360:,.0f} %',delta=f'{diferencia:,.0f}')
+
+       if selected_option =="Padres finalizan bachillerato":
+          
+          input_dfd['FAMI_EDUCACIONPADRE'].replace({2:8,6:8,7:8,9:8},inplace =True)
+          prediction = load_clf.predict(input_dfd)
+          input_dfd['clasificacion'] = prediction
+          
+          c1,c2,c3 = st.columns(3)
+          with c1:
+             menor_280= round(input_dfd[input_dfd['clasificacion']==0].count()[0]/input_dfd['clasificacion'].count()*100,1)
+             diferencia = input_dfd[input_dfd['clasificacion']==0].count().iloc[0,]-df_original[df_original['clasificacion_2']==0].count().iloc[0,] 
+             st.metric(label="Menor a 280 puntos",value=f'{menor_280:,.0f} %', delta=f'{diferencia:,.0f}')
+       
+          with c2:
+             entre280_360= round(input_dfd[input_dfd['clasificacion']==1].count()[0]/input_dfd['clasificacion'].count()*100,1)
+             diferencia = input_dfd[input_dfd['clasificacion']==1].count().iloc[0,]-df_original[df_original['clasificacion_2']==1].count().iloc[0,]
+         
+             st.metric(label="Entre 280 y 360 puntos",value=f'{entre280_360:,.0f} %',delta=f'{diferencia:,.0f}')
+          with c3:
+             mayor_360= round(input_dfd[input_dfd['clasificacion']==2].count()[0]/input_dfd['clasificacion'].count()*100,1)
+             diferencia = input_dfd[input_dfd['clasificacion']==2].count().iloc[0,]-df_original[df_original['clasificacion_2']==2].count().iloc[0,]
+
+             st.metric(label="Mayor a 360 puntos",value=f'{mayor_360:,.0f} %',delta=f'{diferencia:,.0f}')  
+
+          
 
    else:
       st.warning("Por favor, cargue un archivo para continuar.")
