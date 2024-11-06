@@ -40,18 +40,18 @@ def prediccion():
        input_dfd['clasificacion'] = prediction
        c1,c2,c3 = st.columns(3)
        with c1:
-         menor_280= round(input_dfd[input_dfd['clasificacion']==0].count()[0]/input_dfd['clasificacion'].count()*100,1)
+         menor_280= round(input_dfd[input_dfd['clasificacion']==0].count().iloc[0,]/input_dfd['clasificacion'].count()*100,1)
          #productosAnt= dfMesAnterior['Cantidad'].sum()
          #variacion=productosAnt-productosAct
          st.metric(label="Menor a 280 puntos",value=f'{menor_280:,.0f} %',delta="Estudiantes")
        
        with c2:
-         entre280_360= round(input_dfd[input_dfd['clasificacion']==1].count()[0]/input_dfd['clasificacion'].count()*100,1)
+         entre280_360= round(input_dfd[input_dfd['clasificacion']==1].count().iloc[0,]/input_dfd['clasificacion'].count()*100,1)
          #productosAnt= dfMesAnterior['Cantidad'].sum()
          #variacion=productosAnt-productosAct
          st.metric(label="Entre 280 y 360 puntos",value=f'{entre280_360:,.0f} %',delta="Estudiantes")
        with c3:
-         mayor_360= round(input_dfd[input_dfd['clasificacion']==2].count()[0]/input_dfd['clasificacion'].count()*100,1)
+         mayor_360= round(input_dfd[input_dfd['clasificacion']==2].count().iloc[0,]/input_dfd['clasificacion'].count()*100,1)
          #productosAnt= dfMesAnterior['Cantidad'].sum()
          #variacion=productosAnt-productosAct
          st.metric(label="Mayor a 360 puntos",value=f'{mayor_360:,.0f} %',delta="Estudiantes")
@@ -101,7 +101,7 @@ def caracterizacion():
        c1,c2 = st.columns([55,45])
        with c1:
           
-          edu_madre = df_concatenado['FAMI_EDUCACIONMADRE'].value_counts().reset_index()[0:10]
+          edu_madre = df_concatenado['FAMI_EDUCACIONMADRE'].value_counts().reset_index().iloc[0:10]
           fig = px.bar(edu_madre,x='FAMI_EDUCACIONMADRE',y= 'count',title='Distribución educación madre',color='FAMI_EDUCACIONMADRE',labels={'FAMI_EDUCACIONMADRE': '', 'count': ''},text='count')
           fig.update_xaxes(showticklabels=False)
           
@@ -121,7 +121,7 @@ def caracterizacion():
           st.plotly_chart(fig,use_container_width=True)
        with c4:
           
-          horas_trabajo = df_concatenado['ESTU_HORASSEMANATRABAJA'].value_counts().reset_index()[0:10]
+          horas_trabajo = df_concatenado['ESTU_HORASSEMANATRABAJA'].value_counts().reset_index()
           fig = px.bar(horas_trabajo,x='ESTU_HORASSEMANATRABAJA',y= 'count',title='Horas de trabajo estudiante a la semana',color='ESTU_HORASSEMANATRABAJA',labels={'ESTU_HORASSEMANATRABAJA': '', 'count': ''},text='count')
           fig.update_xaxes(showticklabels=False)
           
@@ -129,14 +129,14 @@ def caracterizacion():
 
        c5,c6 = st.columns(2)
        with c5:
-          come_carnepeshu = df_concatenado['FAMI_COMECARNEPESCADOHUEVO'].value_counts().reset_index()[0:10]
+          come_carnepeshu = df_concatenado['FAMI_COMECARNEPESCADOHUEVO'].value_counts().reset_index()
           fig = px.bar(come_carnepeshu,x='FAMI_COMECARNEPESCADOHUEVO',y= 'count',title='Familia come carne, pescado, huevo',color='FAMI_COMECARNEPESCADOHUEVO',labels={'FAMI_COMECARNEPESCADOHUEVO': '', 'count': ''},text='count')
           fig.update_xaxes(showticklabels=False)
           st.plotly_chart(fig,use_container_width=True)  
 
        with c6:
           
-          lectu_diaria = df_concatenado['ESTU_DEDICACIONLECTURADIARIA'].value_counts().reset_index()[0:10]
+          lectu_diaria = df_concatenado['ESTU_DEDICACIONLECTURADIARIA'].value_counts().reset_index()
           fig = px.bar(lectu_diaria,x='ESTU_DEDICACIONLECTURADIARIA',y= 'count',title='Dedicación lectura diaria',color='ESTU_DEDICACIONLECTURADIARIA',labels={'ESTU_DEDICACIONLECTURADIARIA': '', 'count': ''},text='count')
           fig.update_xaxes(showticklabels=False)
           
@@ -155,7 +155,7 @@ def caracterizacion():
           fig = px.pie(fami_internet,values= 'count',names='FAMI_TIENEINTERNET',title='Familia tiene internet',color='FAMI_TIENEINTERNET')
           st.plotly_chart(fig,use_container_width=True)
        with c9:
-          come_leche = df_concatenado['FAMI_COMELECHEDERIVADOS'].value_counts().reset_index()[0:10]
+          come_leche = df_concatenado['FAMI_COMELECHEDERIVADOS'].value_counts().reset_index()
           fig = px.bar(come_leche,x='FAMI_COMELECHEDERIVADOS',y= 'count',title='Familia come leche y derivados',color='FAMI_COMELECHEDERIVADOS',labels={'FAMI_COMELECHEDERIVADOS': '', 'count': ''},text='count')
           fig.update_xaxes(showticklabels=False)
           st.plotly_chart(fig,use_container_width=True)  
@@ -170,7 +170,7 @@ def prescripcion():
    st.subheader('Estrategias para mejorar los resultados de las pruebas saber 11.')
 
    uploaded_file = st.sidebar.file_uploader('cargue su archivo de Excel',type=['xlsx'])
-   options = ["Aumentar número de libros en la familia a 10", "Madres finalizan bachillerato", "Padres finalizan bachillerato", "Horas de trabajo a la semana", "Familia tiene computador", "Dedicación lectura diaria", "Acceso internet", "Carne, pescado, huevos", "Leche -derivados"]
+   options = ["Aumentar cantidad de libros de la familia a mínimo 10", "Madres finalizan bachillerato", "Padres finalizan bachillerato", "Reducir horas de trabajo a la semana", "Familia adquiere computador", "Aumentar dedicación lectura diaria", "Acceder a internet", "Aumentar consumo de Carne, pescado, huevos", "Aumentar consumo Leche y derivados"]
    selected_option = st.selectbox("Elija una estrategia de la lista:", options)
 
 
@@ -187,7 +187,7 @@ def prescripcion():
        df_original =input_dfd.copy()
        prediction_dos= load_clf.predict(df_original)
        df_original['clasificacion_2'] = prediction_dos
-       if selected_option =="Aumentar número de libros en la familia a 10":
+       if selected_option =="Aumentar cantidad de libros de la familia a mínimo 10":
           
           input_dfd['FAMI_NUMLIBROS'].replace({0:1},inplace =True)
           prediction = load_clf.predict(input_dfd)
@@ -195,17 +195,17 @@ def prescripcion():
           
           c1,c2,c3 = st.columns(3)
           with c1:
-             menor_280= round(input_dfd[input_dfd['clasificacion']==0].count()[0]/input_dfd['clasificacion'].count()*100,1)
+             menor_280= round(input_dfd[input_dfd['clasificacion']==0].count().iloc[0,]/input_dfd['clasificacion'].count()*100,1)
              diferencia = input_dfd[input_dfd['clasificacion']==0].count().iloc[0,]-df_original[df_original['clasificacion_2']==0].count().iloc[0,] 
              st.metric(label="Menor a 280 puntos",value=f'{menor_280:,.0f} %', delta=f'{diferencia:,.0f}')
        
           with c2:
-             entre280_360= round(input_dfd[input_dfd['clasificacion']==1].count()[0]/input_dfd['clasificacion'].count()*100,1)
+             entre280_360= round(input_dfd[input_dfd['clasificacion']==1].count().iloc[0,]/input_dfd['clasificacion'].count()*100,1)
              diferencia = input_dfd[input_dfd['clasificacion']==1].count().iloc[0,]-df_original[df_original['clasificacion_2']==1].count().iloc[0,]
          
              st.metric(label="Entre 280 y 360 puntos",value=f'{entre280_360:,.0f} %',delta=f'{diferencia:,.0f}')
           with c3:
-             mayor_360= round(input_dfd[input_dfd['clasificacion']==2].count()[0]/input_dfd['clasificacion'].count()*100,1)
+             mayor_360= round(input_dfd[input_dfd['clasificacion']==2].count().iloc[0,]/input_dfd['clasificacion'].count()*100,1)
              diferencia = input_dfd[input_dfd['clasificacion']==2].count().iloc[0,]-df_original[df_original['clasificacion_2']==2].count().iloc[0,]
 
              st.metric(label="Mayor a 360 puntos",value=f'{mayor_360:,.0f} %',delta=f'{diferencia:,.0f}')
@@ -218,17 +218,17 @@ def prescripcion():
           
           c1,c2,c3 = st.columns(3)
           with c1:
-             menor_280= round(input_dfd[input_dfd['clasificacion']==0].count()[0]/input_dfd['clasificacion'].count()*100,1)
+             menor_280= round(input_dfd[input_dfd['clasificacion']==0].count().iloc[0,]/input_dfd['clasificacion'].count()*100,1)
              diferencia = input_dfd[input_dfd['clasificacion']==0].count().iloc[0,]-df_original[df_original['clasificacion_2']==0].count().iloc[0,] 
              st.metric(label="Menor a 280 puntos",value=f'{menor_280:,.0f} %', delta=f'{diferencia:,.0f}')
        
           with c2:
-             entre280_360= round(input_dfd[input_dfd['clasificacion']==1].count()[0]/input_dfd['clasificacion'].count()*100,1)
+             entre280_360= round(input_dfd[input_dfd['clasificacion']==1].count().iloc[0,]/input_dfd['clasificacion'].count()*100,1)
              diferencia = input_dfd[input_dfd['clasificacion']==1].count().iloc[0,]-df_original[df_original['clasificacion_2']==1].count().iloc[0,]
          
              st.metric(label="Entre 280 y 360 puntos",value=f'{entre280_360:,.0f} %',delta=f'{diferencia:,.0f}')
           with c3:
-             mayor_360= round(input_dfd[input_dfd['clasificacion']==2].count()[0]/input_dfd['clasificacion'].count()*100,1)
+             mayor_360= round(input_dfd[input_dfd['clasificacion']==2].count().iloc[0,]/input_dfd['clasificacion'].count()*100,1)
              diferencia = input_dfd[input_dfd['clasificacion']==2].count().iloc[0,]-df_original[df_original['clasificacion_2']==2].count().iloc[0,]
 
              st.metric(label="Mayor a 360 puntos",value=f'{mayor_360:,.0f} %',delta=f'{diferencia:,.0f}')
@@ -241,22 +241,159 @@ def prescripcion():
           
           c1,c2,c3 = st.columns(3)
           with c1:
-             menor_280= round(input_dfd[input_dfd['clasificacion']==0].count()[0]/input_dfd['clasificacion'].count()*100,1)
+             menor_280= round(input_dfd[input_dfd['clasificacion']==0].count().iloc[0,]/input_dfd['clasificacion'].count()*100,1)
              diferencia = input_dfd[input_dfd['clasificacion']==0].count().iloc[0,]-df_original[df_original['clasificacion_2']==0].count().iloc[0,] 
              st.metric(label="Menor a 280 puntos",value=f'{menor_280:,.0f} %', delta=f'{diferencia:,.0f}')
        
           with c2:
-             entre280_360= round(input_dfd[input_dfd['clasificacion']==1].count()[0]/input_dfd['clasificacion'].count()*100,1)
+             entre280_360= round(input_dfd[input_dfd['clasificacion']==1].count().iloc[0,]/input_dfd['clasificacion'].count()*100,1)
              diferencia = input_dfd[input_dfd['clasificacion']==1].count().iloc[0,]-df_original[df_original['clasificacion_2']==1].count().iloc[0,]
          
              st.metric(label="Entre 280 y 360 puntos",value=f'{entre280_360:,.0f} %',delta=f'{diferencia:,.0f}')
           with c3:
-             mayor_360= round(input_dfd[input_dfd['clasificacion']==2].count()[0]/input_dfd['clasificacion'].count()*100,1)
+             mayor_360= round(input_dfd[input_dfd['clasificacion']==2].count().iloc[0,]/input_dfd['clasificacion'].count()*100,1)
              diferencia = input_dfd[input_dfd['clasificacion']==2].count().iloc[0,]-df_original[df_original['clasificacion_2']==2].count().iloc[0,]
 
              st.metric(label="Mayor a 360 puntos",value=f'{mayor_360:,.0f} %',delta=f'{diferencia:,.0f}')  
 
+       if selected_option =="Reducir horas de trabajo a la semana":
           
+          input_dfd['ESTU_HORASSEMANATRABAJA'].replace({2:1,4:1},inplace =True)
+          prediction = load_clf.predict(input_dfd)
+          input_dfd['clasificacion'] = prediction
+          
+          c1,c2,c3 = st.columns(3)
+          with c1:
+             menor_280= round(input_dfd[input_dfd['clasificacion']==0].count().iloc[0,]/input_dfd['clasificacion'].count()*100,1)
+             diferencia = input_dfd[input_dfd['clasificacion']==0].count().iloc[0,]-df_original[df_original['clasificacion_2']==0].count().iloc[0,] 
+             st.metric(label="Menor a 280 puntos",value=f'{menor_280:,.0f} %', delta=f'{diferencia:,.0f}')
+       
+          with c2:
+             entre280_360= round(input_dfd[input_dfd['clasificacion']==1].count().iloc[0,]/input_dfd['clasificacion'].count()*100,1)
+             diferencia = input_dfd[input_dfd['clasificacion']==1].count().iloc[0,]-df_original[df_original['clasificacion_2']==1].count().iloc[0,]
+         
+             st.metric(label="Entre 280 y 360 puntos",value=f'{entre280_360:,.0f} %',delta=f'{diferencia:,.0f}')
+          with c3:
+             mayor_360= round(input_dfd[input_dfd['clasificacion']==2].count().iloc[0,]/input_dfd['clasificacion'].count()*100,1)
+             diferencia = input_dfd[input_dfd['clasificacion']==2].count().iloc[0,]-df_original[df_original['clasificacion_2']==2].count().iloc[0,]
+
+             st.metric(label="Mayor a 360 puntos",value=f'{mayor_360:,.0f} %',delta=f'{diferencia:,.0f}')   
+       
+       if selected_option =="Familia adquiere computador":
+          
+          input_dfd['FAMI_TIENECOMPUTADOR'].replace({0:1},inplace =True)
+          prediction = load_clf.predict(input_dfd)
+          input_dfd['clasificacion'] = prediction
+          
+          c1,c2,c3 = st.columns(3)
+          with c1:
+             menor_280= round(input_dfd[input_dfd['clasificacion']==0].count().iloc[0,]/input_dfd['clasificacion'].count()*100,1)
+             diferencia = input_dfd[input_dfd['clasificacion']==0].count().iloc[0,]-df_original[df_original['clasificacion_2']==0].count().iloc[0,] 
+             st.metric(label="Menor a 280 puntos",value=f'{menor_280:,.0f} %', delta=f'{diferencia:,.0f}')
+       
+          with c2:
+             entre280_360= round(input_dfd[input_dfd['clasificacion']==1].count().iloc[0,]/input_dfd['clasificacion'].count()*100,1)
+             diferencia = input_dfd[input_dfd['clasificacion']==1].count().iloc[0,]-df_original[df_original['clasificacion_2']==1].count().iloc[0,]
+         
+             st.metric(label="Entre 280 y 360 puntos",value=f'{entre280_360:,.0f} %',delta=f'{diferencia:,.0f}')
+          with c3:
+             mayor_360= round(input_dfd[input_dfd['clasificacion']==2].count().iloc[0,]/input_dfd['clasificacion'].count()*100,1)
+             diferencia = input_dfd[input_dfd['clasificacion']==2].count().iloc[0,]-df_original[df_original['clasificacion_2']==2].count().iloc[0,]
+
+             st.metric(label="Mayor a 360 puntos",value=f'{mayor_360:,.0f} %',delta=f'{diferencia:,.0f}')
+
+       if selected_option =="Aumentar dedicación lectura diaria":
+          
+          input_dfd['ESTU_DEDICACIONLECTURADIARIA'].replace({0:1,2:1,4:1},inplace =True)
+          prediction = load_clf.predict(input_dfd)
+          input_dfd['clasificacion'] = prediction
+          
+          c1,c2,c3 = st.columns(3)
+          with c1:
+             menor_280= round(input_dfd[input_dfd['clasificacion']==0].count().iloc[0,]/input_dfd['clasificacion'].count()*100,1)
+             diferencia = input_dfd[input_dfd['clasificacion']==0].count().iloc[0,]-df_original[df_original['clasificacion_2']==0].count().iloc[0,] 
+             st.metric(label="Menor a 280 puntos",value=f'{menor_280:,.0f} %', delta=f'{diferencia:,.0f}')
+       
+          with c2:
+             entre280_360= round(input_dfd[input_dfd['clasificacion']==1].count().iloc[0,]/input_dfd['clasificacion'].count()*100,1)
+             diferencia = input_dfd[input_dfd['clasificacion']==1].count().iloc[0,]-df_original[df_original['clasificacion_2']==1].count().iloc[0,]
+         
+             st.metric(label="Entre 280 y 360 puntos",value=f'{entre280_360:,.0f} %',delta=f'{diferencia:,.0f}')
+          with c3:
+             mayor_360= round(input_dfd[input_dfd['clasificacion']==2].count().iloc[0,]/input_dfd['clasificacion'].count()*100,1)
+             diferencia = input_dfd[input_dfd['clasificacion']==2].count().iloc[0,]-df_original[df_original['clasificacion_2']==2].count().iloc[0,]
+
+             st.metric(label="Mayor a 360 puntos",value=f'{mayor_360:,.0f} %',delta=f'{diferencia:,.0f}')
+
+       if selected_option =="Acceder a internet":
+          
+          input_dfd['FAMI_TIENEINTERNET'].replace({0:1},inplace =True)
+          prediction = load_clf.predict(input_dfd)
+          input_dfd['clasificacion'] = prediction
+          
+          c1,c2,c3 = st.columns(3)
+          with c1:
+             menor_280= round(input_dfd[input_dfd['clasificacion']==0].count().iloc[0,]/input_dfd['clasificacion'].count()*100,1)
+             diferencia = input_dfd[input_dfd['clasificacion']==0].count().iloc[0,]-df_original[df_original['clasificacion_2']==0].count().iloc[0,] 
+             st.metric(label="Menor a 280 puntos",value=f'{menor_280:,.0f} %', delta=f'{diferencia:,.0f}')
+       
+          with c2:
+             entre280_360= round(input_dfd[input_dfd['clasificacion']==1].count().iloc[0,]/input_dfd['clasificacion'].count()*100,1)
+             diferencia = input_dfd[input_dfd['clasificacion']==1].count().iloc[0,]-df_original[df_original['clasificacion_2']==1].count().iloc[0,]
+         
+             st.metric(label="Entre 280 y 360 puntos",value=f'{entre280_360:,.0f} %',delta=f'{diferencia:,.0f}')
+          with c3:
+             mayor_360= round(input_dfd[input_dfd['clasificacion']==2].count().iloc[0,]/input_dfd['clasificacion'].count()*100,1)
+             diferencia = input_dfd[input_dfd['clasificacion']==2].count().iloc[0,]-df_original[df_original['clasificacion_2']==2].count().iloc[0,]
+
+             st.metric(label="Mayor a 360 puntos",value=f'{mayor_360:,.0f} %',delta=f'{diferencia:,.0f}')
+
+       if selected_option =="Aumentar consumo de Carne, pescado, huevos":
+          
+          input_dfd['FAMI_COMECARNEPESCADOHUEVO'].replace({2:1,0:1},inplace =True)
+          prediction = load_clf.predict(input_dfd)
+          input_dfd['clasificacion'] = prediction
+          
+          c1,c2,c3 = st.columns(3)
+          with c1:
+             menor_280= round(input_dfd[input_dfd['clasificacion']==0].count().iloc[0,]/input_dfd['clasificacion'].count()*100,1)
+             diferencia = input_dfd[input_dfd['clasificacion']==0].count().iloc[0,]-df_original[df_original['clasificacion_2']==0].count().iloc[0,] 
+             st.metric(label="Menor a 280 puntos",value=f'{menor_280:,.0f} %', delta=f'{diferencia:,.0f}')
+       
+          with c2:
+             entre280_360= round(input_dfd[input_dfd['clasificacion']==1].count().iloc[0,]/input_dfd['clasificacion'].count()*100,1)
+             diferencia = input_dfd[input_dfd['clasificacion']==1].count().iloc[0,]-df_original[df_original['clasificacion_2']==1].count().iloc[0,]
+         
+             st.metric(label="Entre 280 y 360 puntos",value=f'{entre280_360:,.0f} %',delta=f'{diferencia:,.0f}')
+          with c3:
+             mayor_360= round(input_dfd[input_dfd['clasificacion']==2].count().iloc[0,]/input_dfd['clasificacion'].count()*100,1)
+             diferencia = input_dfd[input_dfd['clasificacion']==2].count().iloc[0,]-df_original[df_original['clasificacion_2']==2].count().iloc[0,]
+
+             st.metric(label="Mayor a 360 puntos",value=f'{mayor_360:,.0f} %',delta=f'{diferencia:,.0f}')   
+
+       if selected_option =="Aumentar consumo Leche y derivados":
+          
+          input_dfd['FAMI_COMELECHEDERIVADOS'].replace({2:1,0:1},inplace =True)
+          prediction = load_clf.predict(input_dfd)
+          input_dfd['clasificacion'] = prediction
+          
+          c1,c2,c3 = st.columns(3)
+          with c1:
+             menor_280= round(input_dfd[input_dfd['clasificacion']==0].count().iloc[0,]/input_dfd['clasificacion'].count()*100,1)
+             diferencia = input_dfd[input_dfd['clasificacion']==0].count().iloc[0,]-df_original[df_original['clasificacion_2']==0].count().iloc[0,] 
+             st.metric(label="Menor a 280 puntos",value=f'{menor_280:,.0f} %', delta=f'{diferencia:,.0f}')
+       
+          with c2:
+             entre280_360= round(input_dfd[input_dfd['clasificacion']==1].count().iloc[0,]/input_dfd['clasificacion'].count()*100,1)
+             diferencia = input_dfd[input_dfd['clasificacion']==1].count().iloc[0,]-df_original[df_original['clasificacion_2']==1].count().iloc[0,]
+         
+             st.metric(label="Entre 280 y 360 puntos",value=f'{entre280_360:,.0f} %',delta=f'{diferencia:,.0f}')
+          with c3:
+             mayor_360= round(input_dfd[input_dfd['clasificacion']==2].count().iloc[0,]/input_dfd['clasificacion'].count()*100,1)
+             diferencia = input_dfd[input_dfd['clasificacion']==2].count().iloc[0,]-df_original[df_original['clasificacion_2']==2].count().iloc[0,]
+
+             st.metric(label="Mayor a 360 puntos",value=f'{mayor_360:,.0f} %',delta=f'{diferencia:,.0f}')
+
 
    else:
       st.warning("Por favor, cargue un archivo para continuar.")
