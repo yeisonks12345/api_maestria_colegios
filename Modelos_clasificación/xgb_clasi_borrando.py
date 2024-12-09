@@ -62,10 +62,10 @@ importance_df = pd.DataFrame({
 })
 
 # Ordenar las características por importancia (de mayor a menor)
-#importance_df = importance_df.sort_values(by='Importance', ascending=False)
+importance_df = importance_df.sort_values(by='Importance', ascending=False)
 #Imprimir el DataFrame
-#print(importance_df.head(20))
-#importance_df.to_csv('df_output/borrando_faltantes/feature_importance_xgb.csv',index=False)
+
+#importance_df.to_csv('df_output/borrando_faltantes/feature_20_importance_xgb.csv',index=False)
 
 print('accuracy: ',accuracy_score(y_test, predictions))
 print('f1_score: ',f1_score(y_test, predictions, average='weighted'))  # Para manejo de multiclase
