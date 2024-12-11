@@ -137,11 +137,26 @@ def caracterizacion():
        with c6:
           
           lectu_diaria = df_concatenado['ESTU_DEDICACIONLECTURADIARIA'].value_counts().reset_index()
+          suma_mas_unahora= lectu_diaria[lectu_diaria['ESTU_DEDICACIONLECTURADIARIA'].isin(['Entre 30 y 60 minutos','Entre 1 y 2 horas','Más de 2 horas'])]['count']
+          porcentaje_todos = suma_mas_unahora.sum()/lectu_diaria['count'].sum()
+          if porcentaje_todos <= 0.6:
+            decision_umbral ='Proporción de lectura baja'
+          else: 
+            decision_umbral = 'No aplica'
           fig = px.bar(lectu_diaria,x='ESTU_DEDICACIONLECTURADIARIA',y= 'count',title='Dedicación lectura diaria',color='ESTU_DEDICACIONLECTURADIARIA',labels={'ESTU_DEDICACIONLECTURADIARIA': '', 'count': ''},text='count')
           fig.update_xaxes(showticklabels=False)
-          
+          fig.add_annotation(
+            text="Mejora detectada: <br>"+ decision_umbral,  # Mensaje que aparecerá
+            x=2.5,                                    # Índice o posición en el eje x
+            y=200,                                   # Coordenada en el eje y
+            showarrow=False,                         # Mostrar una flecha
+            font=dict(size=14, color="blue"),        # Estilo de la fuente
+            xref="paper",                   # Referencia relativa al espacio total del gráfico (0 a 1)
+            xanchor="right",                # Anclar el texto al borde derecho
+            align='right'
+          ) 
           st.plotly_chart(fig,use_container_width=True)
-      
+          
        c7,c8,c9 = st.columns(3)
        with c7:
           
@@ -170,7 +185,7 @@ def prescripcion():
    st.subheader('Estrategias para mejorar los resultados de las pruebas saber 11.')
 
    uploaded_file = st.sidebar.file_uploader('cargue su archivo de Excel',type=['xlsx'])
-   options = ["Aumentar cantidad de libros de la familia a mínimo 10", "Madres finalizan bachillerato", "Padres finalizan bachillerato", "Reducir horas de trabajo a la semana", "Familia adquiere computador", "Aumentar dedicación lectura diaria", "Acceder a internet", "Aumentar consumo de Carne, pescado, huevos", "Aumentar consumo Leche y derivados"]
+   options = ["Aumentar cantidad de libros de la familia a mínimo 10", "Madres finalizan bachillerato", "Padres finalizan bachillerato", "Reducir horas de trabajo a la semana", "Familia adquiere computador", "Aumentar dedicación lectura diaria mínimo una hora", "Acceder a internet", "Aumentar consumo de Carne, pescado, huevos", "Aumentar consumo Leche y derivados"]
    selected_option = st.selectbox("Elija una estrategia de la lista:", options)
 
 
@@ -302,7 +317,7 @@ def prescripcion():
 
              st.metric(label="Mayor a 360 puntos",value=f'{mayor_360:,.0f} %',delta=f'{diferencia:,.0f}')
 
-       if selected_option =="Aumentar dedicación lectura diaria":
+       if selected_option =="Aumentar dedicación lectura diaria mínimo una hora":
           
           input_dfd['ESTU_DEDICACIONLECTURADIARIA'].replace({0:1,2:1,4:1},inplace =True)
           prediction = load_clf.predict(input_dfd)
