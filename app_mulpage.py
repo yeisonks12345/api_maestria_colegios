@@ -128,16 +128,17 @@ def caracterizacion():
           num_libros = df_concatenado['FAMI_NUMLIBROS'].value_counts().reset_index()
           aumentar_libros= num_libros[num_libros['FAMI_NUMLIBROS'].isin(['26 A 100 LIBROS','MAS DE 100 LIBROS'])]['count']
           porcentaje_todos = aumentar_libros.sum()/num_libros['count'].sum()
-          if porcentaje_todos < 0.9:
+          if porcentaje_todos < 0.8:
             decision_umbral ='Aumentar cantidad <br> de libros.'
           else: 
             decision_umbral = 'Ninguna'
           
           fig = px.bar(num_libros,x='FAMI_NUMLIBROS',y= 'count',title='Cantidad de libros por familia',color='FAMI_NUMLIBROS',labels={'FAMI_NUMLIBROS': '', 'count': ''},text='count')
+          fig.update_xaxes(showticklabels=False)
           fig.add_annotation(
             text="Mejora detectada: <br>"+ decision_umbral,  # Mensaje que aparecerá
             x=2.3,                                    # Índice o posición en el eje x
-            y=-10,                                   # Coordenada en el eje y
+            y=50,                                   # Coordenada en el eje y
             showarrow=False,                         # Mostrar una flecha
             font=dict(size=14, color="blue"),        # Estilo de la fuente
             xref="paper",                   # Referencia relativa al espacio total del gráfico (0 a 1)
@@ -151,23 +152,75 @@ def caracterizacion():
        with c3:
           
           edu_padre = df_concatenado['FAMI_EDUCACIONPADRE'].value_counts().reset_index()[0:10]
+          minimo_tecnico= edu_padre[edu_padre['FAMI_EDUCACIONPADRE'].isin(['Educacion profesional completa','Educacion profesional incompleta','Postgrado','Tecnica o tecnologica completa'])]['count']
+          porcentaje_todos = minimo_tecnico.sum()/edu_padre['count'].sum()
+          if porcentaje_todos < 0.88:
+            decision_umbral ='Fomentar acceso <br> educación superior'
+          else: 
+            decision_umbral = 'Ninguna'
           fig = px.bar(edu_padre,x='FAMI_EDUCACIONPADRE',y= 'count',title='Distribución educación padre',color='FAMI_EDUCACIONPADRE',labels={'FAMI_EDUCACIONPADRE': '', 'count': ''},text='count')
           fig.update_xaxes(showticklabels=False)
-          
+          fig.add_annotation(
+            text="Mejora detectada: <br>"+ decision_umbral,  # Mensaje que aparecerá
+            x=2.8,                                    # Índice o posición en el eje x
+            y=50,                                   # Coordenada en el eje y
+            showarrow=False,                         # Mostrar una flecha
+            font=dict(size=14, color="blue"),        # Estilo de la fuente
+            xref="paper",                   # Referencia relativa al espacio total del gráfico (0 a 1)
+            xanchor="right",                # Anclar el texto al borde derecho
+            align='right',
+            bordercolor="black",  # Color del borde
+            borderwidth=2         # Ancho del borde
+          )
           st.plotly_chart(fig,use_container_width=True)
        with c4:
           
           horas_trabajo = df_concatenado['ESTU_HORASSEMANATRABAJA'].value_counts().reset_index()
+          maximo_20horas= horas_trabajo[horas_trabajo['ESTU_HORASSEMANATRABAJA'].isin(['No_trabaja'])]['count']
+          porcentaje_todos = maximo_20horas.sum()/horas_trabajo['count'].sum()
+          if porcentaje_todos < 0.94:
+            decision_umbral ='Reducir horas <br> de trabajo max. 20'
+          else: 
+            decision_umbral = 'Ninguna'
           fig = px.bar(horas_trabajo,x='ESTU_HORASSEMANATRABAJA',y= 'count',title='Horas de trabajo estudiante a la semana',color='ESTU_HORASSEMANATRABAJA',labels={'ESTU_HORASSEMANATRABAJA': '', 'count': ''},text='count')
           fig.update_xaxes(showticklabels=False)
-          
+          fig.add_annotation(
+            text="Mejora detectada: <br>"+ decision_umbral,  # Mensaje que aparecerá
+            x=2.3,                                    # Índice o posición en el eje x
+            y=50,                                   # Coordenada en el eje y
+            showarrow=False,                         # Mostrar una flecha
+            font=dict(size=14, color="blue"),        # Estilo de la fuente
+            xref="paper",                   # Referencia relativa al espacio total del gráfico (0 a 1)
+            xanchor="right",                # Anclar el texto al borde derecho
+            align='right',
+            bordercolor="black",  # Color del borde
+            borderwidth=2         # Ancho del borde
+          )
           st.plotly_chart(fig,use_container_width=True)
 
        c5,c6 = st.columns(2)
        with c5:
           come_carnepeshu = df_concatenado['FAMI_COMECARNEPESCADOHUEVO'].value_counts().reset_index()
+          minimo_3veces= come_carnepeshu[come_carnepeshu['FAMI_COMECARNEPESCADOHUEVO'].isin(['Todos o casi todos los dias','3 a 5 veces por semana'])]['count']
+          porcentaje_todos = minimo_3veces.sum()/come_carnepeshu['count'].sum()
+          if porcentaje_todos < 0.97:
+            decision_umbral ='Consumo carne, pescado<br> Huevo 3 veces por semana'
+          else: 
+            decision_umbral = 'Ninguna'
           fig = px.bar(come_carnepeshu,x='FAMI_COMECARNEPESCADOHUEVO',y= 'count',title='Familia come carne, pescado, huevo',color='FAMI_COMECARNEPESCADOHUEVO',labels={'FAMI_COMECARNEPESCADOHUEVO': '', 'count': ''},text='count')
           fig.update_xaxes(showticklabels=False)
+          fig.add_annotation(
+            text="Mejora detectada: <br>"+ decision_umbral,  # Mensaje que aparecerá
+            x=3.5,                                    # Índice o posición en el eje x
+            y=50,                                   # Coordenada en el eje y
+            showarrow=False,                         # Mostrar una flecha
+            font=dict(size=14, color="blue"),        # Estilo de la fuente
+            xref="paper",                   # Referencia relativa al espacio total del gráfico (0 a 1)
+            xanchor="right",                # Anclar el texto al borde derecho
+            align='right',
+            bordercolor="black",  # Color del borde
+            borderwidth=2         # Ancho del borde
+          )
           st.plotly_chart(fig,use_container_width=True)  
 
        with c6:
@@ -184,7 +237,7 @@ def caracterizacion():
           fig.add_annotation(
             text="Mejora detectada: <br>"+ decision_umbral,  # Mensaje que aparecerá
             x=2.8,                                    # Índice o posición en el eje x
-            y=200,                                   # Coordenada en el eje y
+            y=50,                                   # Coordenada en el eje y
             showarrow=False,                         # Mostrar una flecha
             font=dict(size=14, color="blue"),        # Estilo de la fuente
             xref="paper",                   # Referencia relativa al espacio total del gráfico (0 a 1)
@@ -199,18 +252,75 @@ def caracterizacion():
        with c7:
           
           fami_compu = df_concatenado['FAMI_TIENECOMPUTADOR'].value_counts().reset_index()
+          computador= fami_compu[fami_compu['FAMI_TIENECOMPUTADOR'].isin(['SI'])]['count']
+          porcentaje_todos = computador.sum()/fami_compu['count'].sum()
+          if porcentaje_todos <= 0.99:
+            decision_umbral ='Acceso a <br> computador en casa.'
+          else: 
+            decision_umbral = 'Ninguna'
           fig = px.pie(fami_compu,values= 'count',names='FAMI_TIENECOMPUTADOR',title='Familia tiene computador',color='FAMI_TIENECOMPUTADOR')
+          fig.add_annotation(
+            text="Mejora detectada: <br>"+ decision_umbral,  # Mensaje que aparecerá
+            x=0.9,                                    # Índice o posición en el eje x
+            y=-0.1,                                   # Coordenada en el eje y
+            showarrow=False,                         # Mostrar una flecha
+            font=dict(size=14, color="blue"),        # Estilo de la fuente
+            xref="paper",                   # Referencia relativa al espacio total del gráfico (0 a 1)
+            yref="paper",
+            xanchor="right",                # Anclar el texto al borde derecho
+            align='right',
+            bordercolor="black",  # Color del borde
+            borderwidth=2         # Ancho del borde
+          )
           st.plotly_chart(fig,use_container_width=True)
           
           
        with c8:
           fami_internet = df_concatenado['FAMI_TIENEINTERNET'].value_counts().reset_index()
+          internet= fami_internet[fami_internet['FAMI_TIENEINTERNET'].isin(['SI'])]['count']
+          porcentaje_todos = internet.sum()/fami_internet['count'].sum()
+          if porcentaje_todos <= 0.99:
+            decision_umbral ='Acceso a <br> internet en casa.'
+          else: 
+            decision_umbral = 'Ninguna'
           fig = px.pie(fami_internet,values= 'count',names='FAMI_TIENEINTERNET',title='Familia tiene internet',color='FAMI_TIENEINTERNET')
+          fig.add_annotation(
+            text="Mejora detectada: <br>"+ decision_umbral,  # Mensaje que aparecerá
+            x=0.9,                                    # Índice o posición en el eje x
+            y=-0.1,                                   # Coordenada en el eje y
+            showarrow=False,                         # Mostrar una flecha
+            font=dict(size=14, color="blue"),        # Estilo de la fuente
+            xref="paper",                   # Referencia relativa al espacio total del gráfico (0 a 1)
+            yref="paper",
+            xanchor="right",                # Anclar el texto al borde derecho
+            align='right',
+            bordercolor="black",  # Color del borde
+            borderwidth=2         # Ancho del borde
+          )
           st.plotly_chart(fig,use_container_width=True)
+       
        with c9:
           come_leche = df_concatenado['FAMI_COMELECHEDERIVADOS'].value_counts().reset_index()
+          minimo_3veces= come_leche[come_leche['FAMI_COMELECHEDERIVADOS'].isin(['Todos o casi todos los dias','3 a 5 veces por semana'])]['count']
+          porcentaje_todos = minimo_3veces.sum()/come_leche['count'].sum()
+          if porcentaje_todos < 0.90:
+            decision_umbral ='Consumo <br>leche<br> derivados 3 <br>veces por <br>semana'
+          else: 
+            decision_umbral = 'Ninguna'
           fig = px.bar(come_leche,x='FAMI_COMELECHEDERIVADOS',y= 'count',title='Familia come leche y derivados',color='FAMI_COMELECHEDERIVADOS',labels={'FAMI_COMELECHEDERIVADOS': '', 'count': ''},text='count')
           fig.update_xaxes(showticklabels=False)
+          fig.add_annotation(
+            text="Mejora detec.: <br>"+ decision_umbral,  # Mensaje que aparecerá
+            x=2.8,                                    # Índice o posición en el eje x
+            y=50,                                   # Coordenada en el eje y
+            showarrow=False,                         # Mostrar una flecha
+            font=dict(size=14, color="blue"),        # Estilo de la fuente
+            xref="paper",                   # Referencia relativa al espacio total del gráfico (0 a 1)
+            xanchor="right",                # Anclar el texto al borde derecho
+            align='right',
+            bordercolor="black",  # Color del borde
+            borderwidth=2         # Ancho del borde
+          )
           st.plotly_chart(fig,use_container_width=True)  
 
 
@@ -223,7 +333,7 @@ def prescripcion():
    st.subheader('Estrategias para mejorar los resultados de las pruebas saber 11.')
 
    uploaded_file = st.sidebar.file_uploader('cargue su archivo de Excel',type=['xlsx'])
-   options = ["Aumentar cantidad de libros en la familia a mínimo 25", "Madres: Culminan mínimo un técnico", "Padres finalizan bachillerato", "Reducir horas de trabajo a la semana", "Familia adquiere computador", "Aumentar dedicación lectura diaria mínimo una hora", "Acceder a internet", "Aumentar consumo de Carne, pescado, huevos", "Aumentar consumo Leche y derivados"]
+   options = ["Aumentar cantidad de libros en la familia a mínimo 25", "Madres: Culminar mínimo un técnico", "Padres: Culminar mínimo un técnico", "Reducir horas de trabajo a la semana máximo a 20", "Familia adquiere computador", "Aumentar dedicación lectura diaria mínimo una hora", "Acceder a internet", "Aumentar frecuencia de consumo de Carne, pescado, huevo min 3 veces por semana", "Aumentar frecuencia de consumo de leche y derivados min 3 veces por semana"]
    selected_option = st.selectbox("Elija una estrategia de la lista:", options)
 
 
@@ -263,7 +373,7 @@ def prescripcion():
 
              st.metric(label="Mayor a 360 puntos",value=f'{mayor_360:,.0f} %',delta=f'{diferencia:,.0f}')
 
-       if selected_option =="Madres: Culminan mínimo un técnico":
+       if selected_option =="Madres: Culminar mínimo un técnico":
           
           input_dfd['FAMI_EDUCACIONMADRE'].replace({2:10,3:10,4:10,6:10,7:10,8:10,9:10,11:10},inplace =True)
           prediction = load_clf.predict(input_dfd)
@@ -286,9 +396,9 @@ def prescripcion():
 
              st.metric(label="Mayor a 360 puntos",value=f'{mayor_360:,.0f} %',delta=f'{diferencia:,.0f}')
 
-       if selected_option =="Padres finalizan bachillerato":
+       if selected_option =="Padres: Culminar mínimo un técnico":
           
-          input_dfd['FAMI_EDUCACIONPADRE'].replace({2:8,6:8,7:8,9:8},inplace =True)
+          input_dfd['FAMI_EDUCACIONPADRE'].replace({2:10,3:10,4:10,6:10,7:10,8:10,9:10,11:10},inplace =True)
           prediction = load_clf.predict(input_dfd)
           input_dfd['clasificacion'] = prediction
           
@@ -309,7 +419,7 @@ def prescripcion():
 
              st.metric(label="Mayor a 360 puntos",value=f'{mayor_360:,.0f} %',delta=f'{diferencia:,.0f}')  
 
-       if selected_option =="Reducir horas de trabajo a la semana":
+       if selected_option =="Reducir horas de trabajo a la semana máximo a 20":
           
           input_dfd['ESTU_HORASSEMANATRABAJA'].replace({2:1,4:1},inplace =True)
           prediction = load_clf.predict(input_dfd)
@@ -401,7 +511,7 @@ def prescripcion():
 
              st.metric(label="Mayor a 360 puntos",value=f'{mayor_360:,.0f} %',delta=f'{diferencia:,.0f}')
 
-       if selected_option =="Aumentar consumo de Carne, pescado, huevos":
+       if selected_option =="Aumentar frecuencia de consumo de Carne, pescado, huevo min 3 veces por semana":
           
           input_dfd['FAMI_COMECARNEPESCADOHUEVO'].replace({2:1,0:1},inplace =True)
           prediction = load_clf.predict(input_dfd)
@@ -424,7 +534,7 @@ def prescripcion():
 
              st.metric(label="Mayor a 360 puntos",value=f'{mayor_360:,.0f} %',delta=f'{diferencia:,.0f}')   
 
-       if selected_option =="Aumentar consumo Leche y derivados":
+       if selected_option =="Aumentar frecuencia de consumo de leche y derivados min 3 veces por semana":
           
           input_dfd['FAMI_COMELECHEDERIVADOS'].replace({2:1,0:1},inplace =True)
           prediction = load_clf.predict(input_dfd)
