@@ -102,14 +102,50 @@ def caracterizacion():
        with c1:
           
           edu_madre = df_concatenado['FAMI_EDUCACIONMADRE'].value_counts().reset_index().iloc[0:10]
+          minimo_tecnico= edu_madre[edu_madre['FAMI_EDUCACIONMADRE'].isin(['Educacion profesional completa','Educacion profesional incompleta','Postgrado','Tecnica o tecnologica completa'])]['count']
+          porcentaje_todos = minimo_tecnico.sum()/edu_madre['count'].sum()
+          if porcentaje_todos < 0.9:
+            decision_umbral ='Fomentar acceso <br> educación superior'
+          else: 
+            decision_umbral = 'Ninguna'
           fig = px.bar(edu_madre,x='FAMI_EDUCACIONMADRE',y= 'count',title='Distribución educación madre',color='FAMI_EDUCACIONMADRE',labels={'FAMI_EDUCACIONMADRE': '', 'count': ''},text='count')
           fig.update_xaxes(showticklabels=False)
-          
+          fig.add_annotation(
+            text="Mejora detectada: <br>"+ decision_umbral,  # Mensaje que aparecerá
+            x=2.8,                                    # Índice o posición en el eje x
+            y=50,                                   # Coordenada en el eje y
+            showarrow=False,                         # Mostrar una flecha
+            font=dict(size=14, color="blue"),        # Estilo de la fuente
+            xref="paper",                   # Referencia relativa al espacio total del gráfico (0 a 1)
+            xanchor="right",                # Anclar el texto al borde derecho
+            align='right',
+            bordercolor="black",  # Color del borde
+            borderwidth=2         # Ancho del borde
+          )
           st.plotly_chart(fig,use_container_width=True)
        with c2:
 
           num_libros = df_concatenado['FAMI_NUMLIBROS'].value_counts().reset_index()
+          aumentar_libros= num_libros[num_libros['FAMI_NUMLIBROS'].isin(['26 A 100 LIBROS','MAS DE 100 LIBROS'])]['count']
+          porcentaje_todos = aumentar_libros.sum()/num_libros['count'].sum()
+          if porcentaje_todos < 0.9:
+            decision_umbral ='Aumentar cantidad <br> de libros.'
+          else: 
+            decision_umbral = 'Ninguna'
+          
           fig = px.bar(num_libros,x='FAMI_NUMLIBROS',y= 'count',title='Cantidad de libros por familia',color='FAMI_NUMLIBROS',labels={'FAMI_NUMLIBROS': '', 'count': ''},text='count')
+          fig.add_annotation(
+            text="Mejora detectada: <br>"+ decision_umbral,  # Mensaje que aparecerá
+            x=2.3,                                    # Índice o posición en el eje x
+            y=-10,                                   # Coordenada en el eje y
+            showarrow=False,                         # Mostrar una flecha
+            font=dict(size=14, color="blue"),        # Estilo de la fuente
+            xref="paper",                   # Referencia relativa al espacio total del gráfico (0 a 1)
+            xanchor="right",                # Anclar el texto al borde derecho
+            align='right',
+            bordercolor="black",  # Color del borde
+            borderwidth=2         # Ancho del borde
+          )
           st.plotly_chart(fig,use_container_width=True)
        c3,c4 = st.columns([55,45])
        with c3:
@@ -140,20 +176,22 @@ def caracterizacion():
           suma_mas_unahora= lectu_diaria[lectu_diaria['ESTU_DEDICACIONLECTURADIARIA'].isin(['Entre 30 y 60 minutos','Entre 1 y 2 horas','Más de 2 horas'])]['count']
           porcentaje_todos = suma_mas_unahora.sum()/lectu_diaria['count'].sum()
           if porcentaje_todos <= 0.6:
-            decision_umbral ='Proporción de lectura baja'
+            decision_umbral ='Aumentar dedicación <br> lectura diaria'
           else: 
-            decision_umbral = 'No aplica'
+            decision_umbral = 'Ninguna'
           fig = px.bar(lectu_diaria,x='ESTU_DEDICACIONLECTURADIARIA',y= 'count',title='Dedicación lectura diaria',color='ESTU_DEDICACIONLECTURADIARIA',labels={'ESTU_DEDICACIONLECTURADIARIA': '', 'count': ''},text='count')
           fig.update_xaxes(showticklabels=False)
           fig.add_annotation(
             text="Mejora detectada: <br>"+ decision_umbral,  # Mensaje que aparecerá
-            x=2.5,                                    # Índice o posición en el eje x
+            x=2.8,                                    # Índice o posición en el eje x
             y=200,                                   # Coordenada en el eje y
             showarrow=False,                         # Mostrar una flecha
             font=dict(size=14, color="blue"),        # Estilo de la fuente
             xref="paper",                   # Referencia relativa al espacio total del gráfico (0 a 1)
             xanchor="right",                # Anclar el texto al borde derecho
-            align='right'
+            align='right',
+            bordercolor="black",  # Color del borde
+            borderwidth=2         # Ancho del borde
           ) 
           st.plotly_chart(fig,use_container_width=True)
           
@@ -185,7 +223,7 @@ def prescripcion():
    st.subheader('Estrategias para mejorar los resultados de las pruebas saber 11.')
 
    uploaded_file = st.sidebar.file_uploader('cargue su archivo de Excel',type=['xlsx'])
-   options = ["Aumentar cantidad de libros de la familia a mínimo 10", "Madres finalizan bachillerato", "Padres finalizan bachillerato", "Reducir horas de trabajo a la semana", "Familia adquiere computador", "Aumentar dedicación lectura diaria mínimo una hora", "Acceder a internet", "Aumentar consumo de Carne, pescado, huevos", "Aumentar consumo Leche y derivados"]
+   options = ["Aumentar cantidad de libros en la familia a mínimo 25", "Madres: Culminan mínimo un técnico", "Padres finalizan bachillerato", "Reducir horas de trabajo a la semana", "Familia adquiere computador", "Aumentar dedicación lectura diaria mínimo una hora", "Acceder a internet", "Aumentar consumo de Carne, pescado, huevos", "Aumentar consumo Leche y derivados"]
    selected_option = st.selectbox("Elija una estrategia de la lista:", options)
 
 
@@ -202,9 +240,9 @@ def prescripcion():
        df_original =input_dfd.copy()
        prediction_dos= load_clf.predict(df_original)
        df_original['clasificacion_2'] = prediction_dos
-       if selected_option =="Aumentar cantidad de libros de la familia a mínimo 10":
+       if selected_option =="Aumentar cantidad de libros en la familia a mínimo 25":
           
-          input_dfd['FAMI_NUMLIBROS'].replace({0:1},inplace =True)
+          input_dfd['FAMI_NUMLIBROS'].replace({0:2,1:2},inplace =True)
           prediction = load_clf.predict(input_dfd)
           input_dfd['clasificacion'] = prediction
           
@@ -225,9 +263,9 @@ def prescripcion():
 
              st.metric(label="Mayor a 360 puntos",value=f'{mayor_360:,.0f} %',delta=f'{diferencia:,.0f}')
 
-       if selected_option =="Madres finalizan bachillerato":
+       if selected_option =="Madres: Culminan mínimo un técnico":
           
-          input_dfd['FAMI_EDUCACIONMADRE'].replace({2:8,6:8,7:8,9:8},inplace =True)
+          input_dfd['FAMI_EDUCACIONMADRE'].replace({2:10,3:10,4:10,6:10,7:10,8:10,9:10,11:10},inplace =True)
           prediction = load_clf.predict(input_dfd)
           input_dfd['clasificacion'] = prediction
           
