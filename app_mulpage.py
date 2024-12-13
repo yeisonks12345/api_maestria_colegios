@@ -105,14 +105,14 @@ def caracterizacion():
           minimo_tecnico= edu_madre[edu_madre['FAMI_EDUCACIONMADRE'].isin(['Educacion profesional completa','Educacion profesional incompleta','Postgrado','Tecnica o tecnologica completa'])]['count']
           porcentaje_todos = minimo_tecnico.sum()/edu_madre['count'].sum()
           if porcentaje_todos < 0.9:
-            decision_umbral ='Fomentar acceso <br> educación superior'
+            decision_umbral ='Menos del 90% de las madres <br>  cuentan con mínimo un técnico'
           else: 
             decision_umbral = 'Ninguna'
           fig = px.bar(edu_madre,x='FAMI_EDUCACIONMADRE',y= 'count',title='Distribución educación madre',color='FAMI_EDUCACIONMADRE',labels={'FAMI_EDUCACIONMADRE': '', 'count': ''},text='count')
           fig.update_xaxes(showticklabels=False)
           fig.add_annotation(
             text="Mejora detectada: <br>"+ decision_umbral,  # Mensaje que aparecerá
-            x=2.8,                                    # Índice o posición en el eje x
+            x=3.4,                                    # Índice o posición en el eje x
             y=50,                                   # Coordenada en el eje y
             showarrow=False,                         # Mostrar una flecha
             font=dict(size=14, color="blue"),        # Estilo de la fuente
@@ -129,7 +129,7 @@ def caracterizacion():
           aumentar_libros= num_libros[num_libros['FAMI_NUMLIBROS'].isin(['26 A 100 LIBROS','MAS DE 100 LIBROS'])]['count']
           porcentaje_todos = aumentar_libros.sum()/num_libros['count'].sum()
           if porcentaje_todos < 0.8:
-            decision_umbral ='Aumentar cantidad <br> de libros.'
+            decision_umbral = 'Menos del 80% de <br>las familias <br> cuentan con más de <br> 25 libros en casa'
           else: 
             decision_umbral = 'Ninguna'
           
@@ -137,7 +137,7 @@ def caracterizacion():
           fig.update_xaxes(showticklabels=False)
           fig.add_annotation(
             text="Mejora detectada: <br>"+ decision_umbral,  # Mensaje que aparecerá
-            x=2.3,                                    # Índice o posición en el eje x
+            x=2.4,                                    # Índice o posición en el eje x
             y=50,                                   # Coordenada en el eje y
             showarrow=False,                         # Mostrar una flecha
             font=dict(size=14, color="blue"),        # Estilo de la fuente
@@ -255,7 +255,7 @@ def caracterizacion():
           computador= fami_compu[fami_compu['FAMI_TIENECOMPUTADOR'].isin(['SI'])]['count']
           porcentaje_todos = computador.sum()/fami_compu['count'].sum()
           if porcentaje_todos <= 0.99:
-            decision_umbral ='Acceso a <br> computador en casa.'
+            decision_umbral ='Más del 1% no  <br>tiene computador'
           else: 
             decision_umbral = 'Ninguna'
           fig = px.pie(fami_compu,values= 'count',names='FAMI_TIENECOMPUTADOR',title='Familia tiene computador',color='FAMI_TIENECOMPUTADOR')
