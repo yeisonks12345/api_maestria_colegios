@@ -155,14 +155,14 @@ def caracterizacion():
           minimo_tecnico= edu_padre[edu_padre['FAMI_EDUCACIONPADRE'].isin(['Educacion profesional completa','Educacion profesional incompleta','Postgrado','Tecnica o tecnologica completa'])]['count']
           porcentaje_todos = minimo_tecnico.sum()/edu_padre['count'].sum()
           if porcentaje_todos < 0.88:
-            decision_umbral ='Fomentar acceso <br> educación superior'
+            decision_umbral ='Menos del 88% de los padres <br>  cuentan con mínimo un técnico'
           else: 
             decision_umbral = 'Ninguna'
           fig = px.bar(edu_padre,x='FAMI_EDUCACIONPADRE',y= 'count',title='Distribución educación padre',color='FAMI_EDUCACIONPADRE',labels={'FAMI_EDUCACIONPADRE': '', 'count': ''},text='count')
           fig.update_xaxes(showticklabels=False)
           fig.add_annotation(
             text="Mejora detectada: <br>"+ decision_umbral,  # Mensaje que aparecerá
-            x=2.8,                                    # Índice o posición en el eje x
+            x=3.4,                                    # Índice o posición en el eje x
             y=50,                                   # Coordenada en el eje y
             showarrow=False,                         # Mostrar una flecha
             font=dict(size=14, color="blue"),        # Estilo de la fuente
@@ -179,14 +179,14 @@ def caracterizacion():
           maximo_20horas= horas_trabajo[horas_trabajo['ESTU_HORASSEMANATRABAJA'].isin(['No_trabaja'])]['count']
           porcentaje_todos = maximo_20horas.sum()/horas_trabajo['count'].sum()
           if porcentaje_todos < 0.94:
-            decision_umbral ='Reducir horas <br> de trabajo max. 20'
+            decision_umbral ='Menos del 94% de <br> los estudiantes <br> no trabaja'
           else: 
             decision_umbral = 'Ninguna'
           fig = px.bar(horas_trabajo,x='ESTU_HORASSEMANATRABAJA',y= 'count',title='Horas de trabajo estudiante a la semana',color='ESTU_HORASSEMANATRABAJA',labels={'ESTU_HORASSEMANATRABAJA': '', 'count': ''},text='count')
           fig.update_xaxes(showticklabels=False)
           fig.add_annotation(
             text="Mejora detectada: <br>"+ decision_umbral,  # Mensaje que aparecerá
-            x=2.3,                                    # Índice o posición en el eje x
+            x=2.4,                                    # Índice o posición en el eje x
             y=50,                                   # Coordenada en el eje y
             showarrow=False,                         # Mostrar una flecha
             font=dict(size=14, color="blue"),        # Estilo de la fuente
@@ -204,7 +204,7 @@ def caracterizacion():
           minimo_3veces= come_carnepeshu[come_carnepeshu['FAMI_COMECARNEPESCADOHUEVO'].isin(['Todos o casi todos los dias','3 a 5 veces por semana'])]['count']
           porcentaje_todos = minimo_3veces.sum()/come_carnepeshu['count'].sum()
           if porcentaje_todos < 0.97:
-            decision_umbral ='Consumo carne, pescado<br> Huevo 3 veces por semana'
+            decision_umbral ='Menos del 97% de las familias <br> Consumo carne, pescado<br> huevo 3 veces por semana'
           else: 
             decision_umbral = 'Ninguna'
           fig = px.bar(come_carnepeshu,x='FAMI_COMECARNEPESCADOHUEVO',y= 'count',title='Familia come carne, pescado, huevo',color='FAMI_COMECARNEPESCADOHUEVO',labels={'FAMI_COMECARNEPESCADOHUEVO': '', 'count': ''},text='count')
@@ -229,14 +229,14 @@ def caracterizacion():
           suma_mas_unahora= lectu_diaria[lectu_diaria['ESTU_DEDICACIONLECTURADIARIA'].isin(['Entre 30 y 60 minutos','Entre 1 y 2 horas','Más de 2 horas'])]['count']
           porcentaje_todos = suma_mas_unahora.sum()/lectu_diaria['count'].sum()
           if porcentaje_todos <= 0.6:
-            decision_umbral ='Aumentar dedicación <br> lectura diaria'
+            decision_umbral ='Menos del 60% de los <br>estudiantes lee mas de <br> 30 minutos diarios'
           else: 
             decision_umbral = 'Ninguna'
           fig = px.bar(lectu_diaria,x='ESTU_DEDICACIONLECTURADIARIA',y= 'count',title='Dedicación lectura diaria',color='ESTU_DEDICACIONLECTURADIARIA',labels={'ESTU_DEDICACIONLECTURADIARIA': '', 'count': ''},text='count')
           fig.update_xaxes(showticklabels=False)
           fig.add_annotation(
             text="Mejora detectada: <br>"+ decision_umbral,  # Mensaje que aparecerá
-            x=2.8,                                    # Índice o posición en el eje x
+            x=2.6,                                    # Índice o posición en el eje x
             y=50,                                   # Coordenada en el eje y
             showarrow=False,                         # Mostrar una flecha
             font=dict(size=14, color="blue"),        # Estilo de la fuente
@@ -280,7 +280,7 @@ def caracterizacion():
           internet= fami_internet[fami_internet['FAMI_TIENEINTERNET'].isin(['SI'])]['count']
           porcentaje_todos = internet.sum()/fami_internet['count'].sum()
           if porcentaje_todos <= 0.99:
-            decision_umbral ='Acceso a <br> internet en casa.'
+            decision_umbral ='Más del 1% no <br> tiene internet'
           else: 
             decision_umbral = 'Ninguna'
           fig = px.pie(fami_internet,values= 'count',names='FAMI_TIENEINTERNET',title='Familia tiene internet',color='FAMI_TIENEINTERNET')
@@ -304,7 +304,7 @@ def caracterizacion():
           minimo_3veces= come_leche[come_leche['FAMI_COMELECHEDERIVADOS'].isin(['Todos o casi todos los dias','3 a 5 veces por semana'])]['count']
           porcentaje_todos = minimo_3veces.sum()/come_leche['count'].sum()
           if porcentaje_todos < 0.90:
-            decision_umbral ='Consumo <br>leche<br> derivados 3 <br>veces por <br>semana'
+            decision_umbral ='Menos del <br>90% consume<br> leche y derivados <br> 3 veces por <br>semana'
           else: 
             decision_umbral = 'Ninguna'
           fig = px.bar(come_leche,x='FAMI_COMELECHEDERIVADOS',y= 'count',title='Familia come leche y derivados',color='FAMI_COMELECHEDERIVADOS',labels={'FAMI_COMELECHEDERIVADOS': '', 'count': ''},text='count')
@@ -333,7 +333,7 @@ def prescripcion():
    st.subheader('Estrategias para mejorar los resultados de las pruebas saber 11.')
 
    uploaded_file = st.sidebar.file_uploader('cargue su archivo de Excel',type=['xlsx'])
-   options = ["Aumentar cantidad de libros en la familia a mínimo 25", "Madres: Culminar mínimo un técnico", "Padres: Culminar mínimo un técnico", "Reducir horas de trabajo a la semana máximo a 20", "Familia adquiere computador", "Aumentar dedicación lectura diaria mínimo una hora", "Acceder a internet", "Aumentar frecuencia de consumo de Carne, pescado, huevo min 3 veces por semana", "Aumentar frecuencia de consumo de leche y derivados min 3 veces por semana"]
+   options = ["Aumentar cantidad de libros en la familia a mínimo 25", "Madres: Culminar mínimo un técnico", "Padres: Culminar mínimo un técnico", "Reducir horas de trabajo a la semana máximo a 20", "Entregar computador a las familias sin equipos en casa", "Aumentar dedicación lectura diaria mínimo una hora", "Campaña para promover acceso a internet en casa", "Aumentar frecuencia de consumo de Carne, pescado, huevo min 3 veces por semana", "Aumentar frecuencia de consumo de leche y derivados min 3 veces por semana"]
    selected_option = st.selectbox("Elija una estrategia de la lista:", options)
 
 
@@ -442,7 +442,7 @@ def prescripcion():
 
              st.metric(label="Mayor a 360 puntos",value=f'{mayor_360:,.0f} %',delta=f'{diferencia:,.0f}')   
        
-       if selected_option =="Familia adquiere computador":
+       if selected_option =="Entregar computador a las familias sin equipos en casa":
           
           input_dfd['FAMI_TIENECOMPUTADOR'].replace({0:1},inplace =True)
           prediction = load_clf.predict(input_dfd)
@@ -488,7 +488,7 @@ def prescripcion():
 
              st.metric(label="Mayor a 360 puntos",value=f'{mayor_360:,.0f} %',delta=f'{diferencia:,.0f}')
 
-       if selected_option =="Acceder a internet":
+       if selected_option =="Campaña para promover acceso a internet en casa":
           
           input_dfd['FAMI_TIENEINTERNET'].replace({0:1},inplace =True)
           prediction = load_clf.predict(input_dfd)
