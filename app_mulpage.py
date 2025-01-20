@@ -339,8 +339,6 @@ def prescripcion():
 
    if uploaded_file is not None:
        input_dfd = pd.read_excel(uploaded_file)
-       input_dfd_copy = input_dfd.copy()
-       input_dfd_copy_dos = input_dfd.copy()
        load_clf =pickle.load(open('icfes_clasi.pkl','rb'))
        with open('label_encoders.pkl', 'rb') as file:
           loaded_label_encoders = pickle.load(file)
@@ -348,8 +346,18 @@ def prescripcion():
              if col in loaded_label_encoders:
                input_dfd[col] = loaded_label_encoders[col].transform(input_dfd[col].astype(str))
        df_original =input_dfd.copy()
+       df_libros = input_dfd.copy()
+       df_madres = input_dfd.copy()
+       df_padres = input_dfd.copy()
+       df_horas_trabajo =input_dfd.copy()
+       df_computador =input_dfd.copy()
+       df_lectura =input_dfd.copy()
+       df_internet =input_dfd.copy()
+       df_consumo_carne =input_dfd.copy()
+       df_consumo_leche =input_dfd.copy()
        prediction_dos= load_clf.predict(df_original)
        df_original['clasificacion_2'] = prediction_dos
+
        if selected_option =="Aumentar cantidad de libros en la familia a mínimo 25":
           
           input_dfd['FAMI_NUMLIBROS'].replace({0:2,1:2},inplace =True)
@@ -370,7 +378,6 @@ def prescripcion():
           with c3:
              mayor_360= round(input_dfd[input_dfd['clasificacion']==2].count().iloc[0,]/input_dfd['clasificacion'].count()*100,1)
              diferencia = input_dfd[input_dfd['clasificacion']==2].count().iloc[0,]-df_original[df_original['clasificacion_2']==2].count().iloc[0,]
-
              st.metric(label="Mayor a 360 puntos",value=f'{mayor_360:,.0f} %',delta=f'{diferencia:,.0f}')
 
        if selected_option =="Madres: Culminar mínimo un técnico":
@@ -556,7 +563,92 @@ def prescripcion():
              diferencia = input_dfd[input_dfd['clasificacion']==2].count().iloc[0,]-df_original[df_original['clasificacion_2']==2].count().iloc[0,]
 
              st.metric(label="Mayor a 360 puntos",value=f'{mayor_360:,.0f} %',delta=f'{diferencia:,.0f}')
+       
+       def opc1_libros():
+          df_libros['FAMI_NUMLIBROS'].replace({0:2,1:2},inplace =True)
+          prediction = load_clf.predict(df_libros)
+          df_libros['clasificacion'] = prediction
+          diferencia_libros = df_libros[df_libros['clasificacion']==0].count().iloc[0,]-df_original[df_original['clasificacion_2']==0].count().iloc[0,]
 
+          return diferencia_libros
+       def opc2_madres():
+          df_madres['FAMI_EDUCACIONMADRE'].replace({2:10,3:10,4:10,6:10,7:10,8:10,9:10,11:10},inplace =True)
+          prediction = load_clf.predict(df_madres)
+          df_madres['clasificacion'] = prediction
+          diferencia_madres = df_madres[df_madres['clasificacion']==0].count().iloc[0,]-df_original[df_original['clasificacion_2']==0].count().iloc[0,]
+
+          return diferencia_madres
+      
+       def opc3_padres():
+          df_padres['FAMI_EDUCACIONPADRE'].replace({2:10,3:10,4:10,6:10,7:10,8:10,9:10,11:10},inplace =True)
+          prediction = load_clf.predict(df_padres)
+          df_padres['clasificacion'] = prediction
+          diferencia_padres = df_padres[df_padres['clasificacion']==0].count().iloc[0,]-df_original[df_original['clasificacion_2']==0].count().iloc[0,]
+
+          return diferencia_padres
+
+       def opc4_horas_tra():
+          df_horas_trabajo['ESTU_HORASSEMANATRABAJA'].replace({2:1,4:1},inplace =True)
+          prediction = load_clf.predict(df_horas_trabajo)
+          df_horas_trabajo['clasificacion'] = prediction
+          diferencia_horas = df_horas_trabajo[df_horas_trabajo['clasificacion']==0].count().iloc[0,]-df_original[df_original['clasificacion_2']==0].count().iloc[0,]
+
+          return diferencia_horas
+
+       def opc5_computador():
+          df_computador['FAMI_TIENECOMPUTADOR'].replace({0:1},inplace =True)
+          prediction = load_clf.predict(df_computador)
+          df_computador['clasificacion'] = prediction
+          diferencia_computador = df_computador[df_computador['clasificacion']==0].count().iloc[0,]-df_original[df_original['clasificacion_2']==0].count().iloc[0,]
+
+          return diferencia_computador
+
+       def opc6_lectura():
+          df_lectura['ESTU_DEDICACIONLECTURADIARIA'].replace({0:1,2:1,4:1},inplace =True)
+          prediction = load_clf.predict(df_lectura)
+          df_lectura['clasificacion'] = prediction
+          diferencia_lectura = df_lectura[df_lectura['clasificacion']==0].count().iloc[0,]-df_original[df_original['clasificacion_2']==0].count().iloc[0,]
+
+          return diferencia_lectura   
+
+       def opc7_internet():
+          df_internet['FAMI_TIENEINTERNET'].replace({0:1},inplace =True)
+          prediction = load_clf.predict(df_internet)
+          df_internet['clasificacion'] = prediction
+          diferencia_internet = df_internet[df_internet['clasificacion']==0].count().iloc[0,]-df_original[df_original['clasificacion_2']==0].count().iloc[0,]
+
+          return diferencia_internet
+
+       def opc8_carne():
+          df_consumo_carne['FAMI_COMECARNEPESCADOHUEVO'].replace({2:1,0:1},inplace =True)
+          prediction = load_clf.predict(df_consumo_carne)
+          df_consumo_carne['clasificacion'] = prediction
+          diferencia_consumo_carne = df_consumo_carne[df_consumo_carne['clasificacion']==0].count().iloc[0,]-df_original[df_original['clasificacion_2']==0].count().iloc[0,]
+
+          return diferencia_consumo_carne
+       
+       def opc9_leche():
+          df_consumo_leche['FAMI_COMELECHEDERIVADOS'].replace({2:1,0:1},inplace =True)
+          prediction = load_clf.predict(df_consumo_leche)
+          df_consumo_leche['clasificacion'] = prediction
+          diferencia_consumo_leche = df_consumo_leche[df_consumo_leche['clasificacion']==0].count().iloc[0,]-df_original[df_original['clasificacion_2']==0].count().iloc[0,]
+
+          return diferencia_consumo_leche
+
+       dic_estrategias ={
+         'Estrategia_libros:':f'{round(opc1_libros()*-1/df_libros.shape[0],3)*100}%',
+         'Estrategia educación_madres: ':f'{round(opc2_madres()*-1/df_madres.shape[0],3)*100}%',
+         'Estrategia educación_padres: ':f'{round(opc3_padres()*-1/df_padres.shape[0],2)*100}%',
+         'Estrategia reducir_horas_trabajo':f'{round(opc4_horas_tra()*-1/df_horas_trabajo.shape[0],3)*100}%',
+         'Estrategia entrega_computadores':f'{round(opc5_computador()*-1/df_computador.shape[0],2)*100}%',
+         'Estrategia Aumentar_lectura':f'{round(opc6_lectura()*-1/df_lectura.shape[0],3)*100}%',
+         'Estrategia Internet':f'{round(opc7_internet()*-1/df_internet.shape[0],3)*100}%',
+         'Estrategia Consumo_carne':f'{round(opc8_carne()*-1/df_consumo_carne.shape[0],3)*100}%',
+         'Estrategia COnsumo_leche':f'{round(opc9_leche()*-1/df_consumo_leche.shape[0],3)*100}%'
+         } 
+    
+       st.write(dic_estrategias)
+        
 
    else:
       st.warning("Por favor, cargue un archivo para continuar.")
