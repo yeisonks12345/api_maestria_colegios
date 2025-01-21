@@ -563,7 +563,7 @@ def prescripcion():
              diferencia = input_dfd[input_dfd['clasificacion']==2].count().iloc[0,]-df_original[df_original['clasificacion_2']==2].count().iloc[0,]
 
              st.metric(label="Mayor a 360 puntos",value=f'{mayor_360:,.0f} %',delta=f'{diferencia:,.0f}')
-       
+       st.subheader('Listado con las 3 mejores estrategias para su colegio.')
        def opc1_libros():
           df_libros['FAMI_NUMLIBROS'].replace({0:2,1:2},inplace =True)
           prediction = load_clf.predict(df_libros)
@@ -636,18 +636,21 @@ def prescripcion():
           return diferencia_consumo_leche
 
        dic_estrategias ={
-         'Estrategia_libros:':f'{round(opc1_libros()*-1/df_libros.shape[0],3)*100}%',
+         'Estrategia Aumentar_libros_encasa:':f'{round(opc1_libros()*-1/df_libros.shape[0],3)*100}%',
          'Estrategia educación_madres: ':f'{round(opc2_madres()*-1/df_madres.shape[0],3)*100}%',
          'Estrategia educación_padres: ':f'{round(opc3_padres()*-1/df_padres.shape[0],2)*100}%',
          'Estrategia reducir_horas_trabajo':f'{round(opc4_horas_tra()*-1/df_horas_trabajo.shape[0],3)*100}%',
          'Estrategia entrega_computadores':f'{round(opc5_computador()*-1/df_computador.shape[0],2)*100}%',
-         'Estrategia Aumentar_lectura':f'{round(opc6_lectura()*-1/df_lectura.shape[0],3)*100}%',
+         'Estrategia Aumentar_lectura_diaria:':f'{round(opc6_lectura()*-1/df_lectura.shape[0],3)*100}%',
          'Estrategia Internet':f'{round(opc7_internet()*-1/df_internet.shape[0],3)*100}%',
          'Estrategia Consumo_carne':f'{round(opc8_carne()*-1/df_consumo_carne.shape[0],3)*100}%',
-         'Estrategia COnsumo_leche':f'{round(opc9_leche()*-1/df_consumo_leche.shape[0],3)*100}%'
+         'Estrategia Consumo_leche':f'{round(opc9_leche()*-1/df_consumo_leche.shape[0],3)*100}%'
          } 
-    
-       st.write(dic_estrategias)
+       dic_ordenado = dict(sorted(dic_estrategias.items(), key=lambda item: float(item[1].strip('%')), reverse=True))
+       df_estrategias = pd.DataFrame(list(dic_ordenado.items()),columns=['Estrategia','Porcentaje'])
+       
+
+       st.write(df_estrategias.head(3))
         
 
    else:
